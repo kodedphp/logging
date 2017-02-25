@@ -27,7 +27,7 @@ interface Logger extends LoggerInterface
 
     /**
      * @param Throwable $e
-     * @param Processor $processor {optional]
+     * @param Processor $processor [optional]
      *
      * @return void
      */
