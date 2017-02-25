@@ -1,11 +1,9 @@
 language: php
-
 sudo: false
-
 php:
   - 7.0
   - 7.1
   - nightly
 
-install: travis_retry composer install -o --prefer-source --no-interaction
-script: vendor/bin/phpunit
+before_csript: composer install -o --prefer-source --no-interaction
+script: phpunit
