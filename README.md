@@ -5,6 +5,12 @@ A simple message logging library that implements [PSR-3][psr-3]
 with several log processors. It supports multiple log writers that
 can be set separately and process messages based on the log level.
 
+[![Software license](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](LICENSE)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.0-8892BF.svg)](https://php.net/)
+[![Build Status](https://travis-ci.org/kodeart/koded-logging.svg?branch=master)](https://travis-ci.org/kodeart/koded-logging)
+[![Latest Stable Version](https://img.shields.io/packagist/v/koded/logging.svg)](https://packagist.org/packages/koded/logging)
+
+
 Installation
 ------------
 
@@ -45,7 +51,7 @@ $log->warning("You don't see anything");
 Configuration
 -------------
 
-@TODO There are two ways of throwing the log messages
+There are two ways of throwing the log messages
 - register the logger at PHP's shutdown phase with
 ```php
 <?php
