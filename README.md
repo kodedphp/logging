@@ -121,7 +121,7 @@ Processors
 - **Memory**
   will store all messages in an array. Useful for unit tests if the logger is involved
 
-- **Void**
+- **Voided**
   is here for no particular reason and purpose. It's the fastest one tho
 
 

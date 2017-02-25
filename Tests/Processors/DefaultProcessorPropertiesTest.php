@@ -9,7 +9,7 @@ class DefaultProcessorPropertiesTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaults()
     {
-        $processor = new Void([]);
+        $processor = new Voided([]);
         $this->assertAttributeSame(-1, 'levels', $processor);
         $this->assertAttributeSame('[timestamp] levelname: message', 'format', $processor);
         $this->assertAttributeSame('', 'formatted', $processor);
