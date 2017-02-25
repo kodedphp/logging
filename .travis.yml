@@ -3,7 +3,6 @@ sudo: false
 php:
   - 7.0
   - 7.1
-  - nightly
 
 before_script: composer install -o --prefer-source --no-interaction
 script: phpunit
