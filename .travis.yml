@@ -5,5 +5,5 @@ php:
   - 7.1
   - nightly
 
-before_csript: composer install -o --prefer-source --no-interaction
+before_script: composer install -o --prefer-source --no-interaction
 script: phpunit
