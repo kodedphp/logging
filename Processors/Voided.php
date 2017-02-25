@@ -3,10 +3,10 @@
 namespace Koded\Logging\Processors;
 
 /**
- * Void processor, does nothing and it's completely useless.
+ * Voided processor, does nothing and it's completely useless.
  *
  */
-final class Void extends Processor
+final class Voided extends Processor
 {
 
     public function __construct(array $settings)
