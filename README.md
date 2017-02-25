@@ -62,7 +62,7 @@ $logger->register();
 register_shutdown_function([$logger, 'process']);
 
 // or
-register_shutdown_function([new Log([$settings]), 'process']);
+register_shutdown_function([new Log($settings), 'process']);
 ```
 somewhere in your bootstrap, at the very beginning of your project.
 **You do this only once**.
