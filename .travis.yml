@@ -4,5 +4,9 @@ php:
   - 7.0
   - 7.1
 
-before_script: composer install -o --prefer-source --no-interaction
-script: phpunit
+before_script: composer install -o --dev --no-interaction
+script:
+  - mkdir -p build/logs
+  - phpunit
+after_success:
+  - travis_retry php vendor/bin/coveralls
