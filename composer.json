@@ -18,7 +18,10 @@
   "autoload": {
     "psr-4": {
       "Koded\\Logging\\": ""
-    }
+    },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
   },
   "require-dev": {
     "phpunit/phpunit": "*",

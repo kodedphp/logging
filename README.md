@@ -8,7 +8,7 @@ can be set separately and process messages based on the log level.
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.0-8892BF.svg)](https://php.net/)
 [![Build Status](https://travis-ci.org/kodedphp/logging.svg?branch=master)](https://travis-ci.org/kodedphp/logging)
 [![Coverage Status](https://coveralls.io/repos/github/kodedphp/logging/badge.svg?branch=master)](https://coveralls.io/github/kodedphp/logging?branch=master)
-[![Latest Stable Version](https://img.shields.io/packagist/v/kodedphp/logging.svg)](https://packagist.org/packages/koded/logging)
+[![Latest Stable Version](https://img.shields.io/packagist/v/koded/logging.svg)](https://packagist.org/packages/koded/logging)
 [![Software license](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](LICENSE)
 
 
