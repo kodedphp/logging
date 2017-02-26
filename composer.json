@@ -4,7 +4,7 @@
   "type": "library",
   "license": "BSD-3-Clause",
   "description": "A simple standalone logging facility with several log processors",
-  "keywords": ["logger", "log", "psr-3", "php7"],
+  "keywords": ["logging", "log", "logger", "logging-library", "psr-3", "php7"],
   "authors": [
     {
       "name": "Mihail Binev",
@@ -16,8 +16,8 @@
     "psr/log": "^1.0.1"
   },
   "autoload": {
-    "psr-0": {
-      "Koded\\Logging": ""
+    "psr-4": {
+      "Koded\\Logging\\": ""
     }
   },
   "require-dev": {
