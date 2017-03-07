@@ -7,8 +7,8 @@ matrix:
   fast_finish: true
 before_script:
   - mkdir -p build/logs
-  - composer update --prefer-dist --prefer-lowest --prefer-stable
+  - composer update --prefer-dist
 script:
-  - vendor/bin/phpunit
+  - phpunit
 after_success:
   - travis_retry php vendor/bin/coveralls
