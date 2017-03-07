@@ -9,6 +9,6 @@ before_script:
   - mkdir -p build/logs
   - composer update --prefer-dist --prefer-lowest --prefer-stable
 script:
-  - vandor/bin/phpunit
+  - vendor/bin/phpunit
 after_success:
   - travis_retry php vendor/bin/coveralls
