@@ -3,8 +3,9 @@
 namespace Koded\Logging\Processors;
 
 use Koded\Logging\Logger;
+use PHPUnit\Framework\TestCase;
 
-class ErrorLogTest extends \PHPUnit_Framework_TestCase
+class ErrorLogTest extends TestCase
 {
 
     public function testFormatting()

@@ -3,8 +3,9 @@
 namespace Koded\Logging;
 
 use Koded\Logging\Processors\Memory;
+use PHPUnit\Framework\TestCase;
 
-class LogConstructorTest extends \PHPUnit_Framework_TestCase
+class LogConstructorTest extends TestCase
 {
 
     public function testConstructionWithConfigArray()

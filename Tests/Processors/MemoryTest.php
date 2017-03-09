@@ -2,7 +2,9 @@
 
 namespace Koded\Logging\Processors;
 
-class MemoryTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class MemoryTest extends TestCase
 {
 
     public function testFormatting()

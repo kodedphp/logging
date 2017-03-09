@@ -4,8 +4,9 @@ namespace Koded\Logging;
 
 use Exception;
 use Koded\Logging\Processors\Memory;
+use PHPUnit\Framework\TestCase;
 
-class LogTest extends \PHPUnit_Framework_TestCase
+class LogTest extends TestCase
 {
 
     /**

@@ -3,8 +3,9 @@
 namespace Koded\Logging\Processors;
 
 use Koded\Logging\Logger;
+use PHPUnit\Framework\TestCase;
 
-class DefaultProcessorPropertiesTest extends \PHPUnit_Framework_TestCase
+class DefaultProcessorPropertiesTest extends TestCase
 {
 
     public function testDefaults()

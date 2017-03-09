@@ -2,7 +2,9 @@
 
 namespace Koded\Logging\Processors;
 
-class VoidedTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class VoidedTest extends TestCase
 {
 
     public function testDefaults()

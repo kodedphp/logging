@@ -63,7 +63,9 @@ class File extends Processor
 
         if (!is_dir($dir)) {
             if (false === @mkdir($dir, 0777, true)) {
+                // @codeCoverageIgnoreStart
                 throw new Exception(sprintf('Failed to create a log directory "%s".', $dir));
+                // @codeCoverageIgnoreEnd
             }
         }
 
