@@ -1,6 +1,5 @@
 {
   "name": "koded/logging",
-  "version": "1.0.3",
   "type": "library",
   "license": "BSD-3-Clause",
   "description": "A simple standalone logging facility with several log processors",
@@ -13,7 +12,8 @@
   ],
   "require": {
     "php": "~7",
-    "psr/log": "^1.0.1"
+    "psr/log": "^1.0.1",
+    "koded/stdlib": "~1"
   },
   "autoload": {
     "psr-4": {

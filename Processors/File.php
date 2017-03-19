@@ -3,6 +3,7 @@
 namespace Koded\Logging\Processors;
 
 use Exception;
+use Koded\Exceptions\KodedException;
 
 /**
  * Log processor for storing the log messages into text files on the disk.
@@ -21,6 +22,10 @@ use Exception;
  */
 class File extends Processor
 {
+
+    const E_DIRECTORY_DOES_NOT_EXIST = 1;
+    const E_DIRECTORY_NOT_WRITABLE = 2;
+    const E_DIRECTORY_NOT_CREATED = 3;
 
     /**
      * @var string The log filename.
@@ -52,11 +57,11 @@ class File extends Processor
             ) . DIRECTORY_SEPARATOR;
 
         if (!is_dir($dir)) {
-            throw new Exception(sprintf('Log directory "%s" must exist.', $dir));
+            throw new FileProcessorException(self::E_DIRECTORY_DOES_NOT_EXIST, [':dir' => $dir]);
         }
 
         if (!is_writable($dir)) {
-            throw new Exception(sprintf('Log directory "%s" must be writable.', $dir));
+            throw new FileProcessorException(self::E_DIRECTORY_NOT_WRITABLE, [':dir' => $dir]);
         }
 
         $dir = sprintf('%s%s%s', $dir, date('Y/m'), DIRECTORY_SEPARATOR);
@@ -64,7 +69,7 @@ class File extends Processor
         if (!is_dir($dir)) {
             if (false === @mkdir($dir, 0777, true)) {
                 // @codeCoverageIgnoreStart
-                throw new Exception(sprintf('Failed to create a log directory "%s".', $dir));
+                throw new FileProcessorException(self::E_DIRECTORY_NOT_CREATED, [':dir' => $dir]);
                 // @codeCoverageIgnoreEnd
             }
         }
@@ -76,4 +81,13 @@ class File extends Processor
     {
         file_put_contents($this->filename, strtr($this->format, $message) . PHP_EOL, FILE_APPEND);
     }
+}
+
+class FileProcessorException extends KodedException
+{
+    protected $messages = [
+        File::E_DIRECTORY_DOES_NOT_EXIST => 'Log directory ":dir" must exist.',
+        File::E_DIRECTORY_NOT_WRITABLE => 'Log directory ":dir" must be writable.',
+        File::E_DIRECTORY_NOT_CREATED => 'Failed to create a log directory ":dir".',
+    ];
 }

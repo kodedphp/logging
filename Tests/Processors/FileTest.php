@@ -2,7 +2,6 @@
 
 namespace Koded\Logging\Processors;
 
-use Exception;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
@@ -42,7 +41,7 @@ class FileTest extends TestCase
     {
         $dir = $this->dir->url() . '/nonexistent';
 
-        $this->expectException(Exception::class);
+        $this->expectException(FileProcessorException::class);
         $this->expectExceptionMessage('Log directory "' . $dir . '/" must exist');
 
         $processor = new File(['dir' => $dir]);
@@ -57,7 +56,7 @@ class FileTest extends TestCase
     {
         $dir = $this->dir->url();
 
-        $this->expectException(Exception::class);
+        $this->expectException(FileProcessorException::class);
         $this->expectExceptionMessage('Log directory "' . $dir . '/" must be writable');
 
         vfsStreamWrapper::getRoot()->chmod(0400);
