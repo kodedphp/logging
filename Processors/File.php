@@ -2,7 +2,6 @@
 
 namespace Koded\Logging\Processors;
 
-use Exception;
 use Koded\Exceptions\KodedException;
 
 /**
@@ -42,19 +41,18 @@ class File extends Processor
     }
 
     /**
-     * NOTE: This method should be refactored at some point in time!
-     * AVOID INIT METHODS AND CONSTRUCTORS THAT IMPLEMENTS LOGIC!
+     * Prepares the directory and the log filename.
      *
      * @param array $settings
      *
-     * @throws Exception
+     * @throws FileProcessorException
      */
     protected function initialize(array $settings)
     {
+        umask(umask() | 0002);
+
         $cwd = pathinfo($_SERVER['SCRIPT_FILENAME'] ?? '/tmp', PATHINFO_DIRNAME);
-        $dir = rtrim(
-                $settings['dir'] ?? $cwd . DIRECTORY_SEPARATOR . 'logs', DIRECTORY_SEPARATOR
-            ) . DIRECTORY_SEPARATOR;
+        $dir = rtrim($settings['dir'] ?? $cwd . DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
         if (!is_dir($dir)) {
             throw new FileProcessorException(self::E_DIRECTORY_DOES_NOT_EXIST, [':dir' => $dir]);
@@ -66,12 +64,10 @@ class File extends Processor
 
         $dir = sprintf('%s%s%s', $dir, date('Y/m'), DIRECTORY_SEPARATOR);
 
-        if (!is_dir($dir)) {
-            if (false === @mkdir($dir, 0777, true)) {
-                // @codeCoverageIgnoreStart
-                throw new FileProcessorException(self::E_DIRECTORY_NOT_CREATED, [':dir' => $dir]);
-                // @codeCoverageIgnoreEnd
-            }
+        if (!is_dir($dir) and false === mkdir($dir, 0775, true)) {
+            // @codeCoverageIgnoreStart
+            throw new FileProcessorException(self::E_DIRECTORY_NOT_CREATED, [':dir' => $dir]);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->filename = sprintf('%s%s%s', $dir, date('d'), $settings['extension'] ?? '.log');
