@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 class ErrorLogTest extends TestCase
 {
 
-    public function testFormatting()
+    public function test_formatting()
     {
         $processor = new ErrorLog([]);
 

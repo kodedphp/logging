@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 class SyslogTest extends TestCase
 {
 
-    public function testFormatting()
+    public function test_formatting()
     {
         $processor = new Syslog([]);
 

@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 class VoidedTest extends TestCase
 {
 
-    public function testDefaults()
+    public function test_defaults()
     {
         $processor = new Voided([]);
 

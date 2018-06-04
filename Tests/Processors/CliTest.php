@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 class CliTest extends TestCase
 {
 
-    public function testFormatting()
+    public function test_formatting()
     {
         $processor = new Cli([]);
 

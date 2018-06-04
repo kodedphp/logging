@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 class DefaultProcessorPropertiesTest extends TestCase
 {
 
-    public function testDefaults()
+    public function test_defaults()
     {
         $processor = new Voided([]);
         $this->assertAttributeSame(-1, 'levels', $processor);
@@ -16,7 +16,7 @@ class DefaultProcessorPropertiesTest extends TestCase
         $this->assertAttributeSame('', 'formatted', $processor);
     }
 
-    public function testConstructorSettings()
+    public function test_constructor_settings()
     {
         $processor = new Memory([
             'levels' => Logger::ALERT | Logger::NOTICE | Logger::WARNING,

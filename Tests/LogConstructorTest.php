@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 class LogConstructorTest extends TestCase
 {
 
-    public function testConstructionWithConfigArray()
+    public function test_construction_with_config_array()
     {
         $log = new Log([
             'timezone' => 'Europe/Berlin',
@@ -22,7 +22,7 @@ class LogConstructorTest extends TestCase
         $this->assertAttributeSame('Europe/Berlin', 'timezone', $log);
     }
 
-    public function testConstructionWithoutConfig()
+    public function test_construction_without_config()
     {
         $log = new Log([]);
         $this->assertAttributeSame('d/m/Y H:i:s', 'dateFormat', $log);

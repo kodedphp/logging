@@ -14,7 +14,7 @@ class LogTest extends TestCase
      */
     private $SUT;
 
-    public function testAttachAndDetach()
+    public function test_attach_and_detach()
     {
         $processor = new Memory([]);
         $this->assertAttributeCount(0, 'processors', $this->SUT);
@@ -26,14 +26,14 @@ class LogTest extends TestCase
         $this->assertAttributeCount(0, 'processors', $this->SUT);
     }
 
-    public function testMessagesStack()
+    public function test_messages_stack()
     {
         $this->assertAttributeCount(0, 'messages', $this->SUT);
         $this->SUT->alert('Hello');
         $this->assertAttributeCount(1, 'messages', $this->SUT);
     }
 
-    public function testMessageBlock()
+    public function test_message_block()
     {
         $this->SUT->alert('Hello {you}', ['you' => 'the most awesome person in the universe']);
         $message = $this->getMessages()[0];
@@ -44,7 +44,7 @@ class LogTest extends TestCase
         $this->assertInternalType('string', $message['timestamp']);
     }
 
-    public function testUnsupportedLevelShouldPassToDefaultLevel()
+    public function test_unsupported_level_should_pass_to_default_level()
     {
         $this->SUT->log('', '');
         $message = $this->getMessages()[0];
@@ -53,14 +53,14 @@ class LogTest extends TestCase
         $this->assertSame('LOG', $message['levelname']);
     }
 
-    public function testExceptionAttribute()
+    public function test_exception_attribute()
     {
         $processor = new Memory([]);
         $this->SUT->exception(new Exception('The message', 1), $processor);
         $this->assertAttributeContains('ALERT: The message', 'formatted', $processor);
     }
 
-    public function testLogSuppression()
+    public function test_log_suppression()
     {
         $processor = new Memory([
             'levels' => 0 // suppress the logger completely
@@ -78,7 +78,7 @@ class LogTest extends TestCase
         $this->assertSame('', $processor->formatted());
     }
 
-    public function testRegister()
+    public function test_register()
     {
         $mock = $this
             ->getMockBuilder(Log::class)

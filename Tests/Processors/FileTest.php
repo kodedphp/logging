@@ -19,7 +19,7 @@ class FileTest extends TestCase
      * @dataProvider dataMessage
      * @param $message
      */
-    public function testFormatting($message)
+    public function test_formatting($message)
     {
         $subdirectory = date('Y/m');
         $file = date('d') . '.log';
@@ -37,7 +37,7 @@ class FileTest extends TestCase
      * @dataProvider dataMessage
      * @param $message
      */
-    public function testWhenDirectoryDoesNotExist($message)
+    public function test_when_directory_does_not_exist($message)
     {
         $dir = $this->dir->url() . '/nonexistent';
 
@@ -52,7 +52,7 @@ class FileTest extends TestCase
      * @dataProvider dataMessage
      * @param $message
      */
-    public function testWhenDirectoryIsNotWritable($message)
+    public function test_when_directory_is_not_writable($message)
     {
         $dir = $this->dir->url();
 

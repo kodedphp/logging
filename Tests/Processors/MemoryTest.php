@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 class MemoryTest extends TestCase
 {
 
-    public function testFormatting()
+    public function test_formatting()
     {
         $processor = new Memory([]);
 
