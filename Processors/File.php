@@ -64,7 +64,7 @@ class File extends Processor
 
         $dir = sprintf('%s%s%s', $dir, date('Y/m'), DIRECTORY_SEPARATOR);
 
-        if (!is_dir($dir) and false === mkdir($dir, 0775, true)) {
+        if (!is_dir($dir) && false === mkdir($dir, 0775, true)) {
             // @codeCoverageIgnoreStart
             throw new FileProcessorException(self::E_DIRECTORY_NOT_CREATED, [':dir' => $dir]);
             // @codeCoverageIgnoreEnd
