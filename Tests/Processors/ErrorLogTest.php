@@ -15,9 +15,15 @@ class ErrorLogTest extends TestCase
         $processor->update([
             [
                 'level' => Logger::DEBUG,
-                'levelname' => 'TEST',
-                'message' => 'Hello',
+                'levelname' => 'INFO',
+                'message' => 'ErrorLog 1',
                 'timestamp' => 1234567890
+            ],
+            [
+                'level' => Logger::DEBUG,
+                'levelname' => 'WARN',
+                'message' => 'ErrorLog 2',
+                'timestamp' => 1234567891
             ]
         ]);
 

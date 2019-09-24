@@ -10,9 +10,10 @@ class DefaultProcessorPropertiesTest extends TestCase
 
     public function test_defaults()
     {
-        $processor = new Voided([]);
+        $processor = new Memory([]);
+
         $this->assertAttributeSame(-1, 'levels', $processor);
-        $this->assertAttributeSame('[timestamp] levelname: message', 'format', $processor);
+        $this->assertAttributeSame('timestamp [levelname]: message', 'format', $processor);
         $this->assertAttributeSame('', 'formatted', $processor);
     }
 
