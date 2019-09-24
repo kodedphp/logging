@@ -1,8 +1,9 @@
-build
-vendor
-.DS_Store
-.idea
+build/
+logs/
+vendor/
+.DS_Store/
+.idea/
 composer.lock
-phpunit.phar
+*.phar
 *.yml
-!.travis.yml
+!.scrutinizer.yml
