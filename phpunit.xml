@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/5.7/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/7.4/phpunit.xsd"
          bootstrap="vendor/autoload.php"
+         stopOnFailure="true"
          verbose="true"
          colors="true">
     <testsuites>
         <testsuite name="Koded Logging Test Suite">
-            <directory suffix="Test.php">Tests</directory>
+            <directory>Tests</directory>
         </testsuite>
     </testsuites>
 
-    <!-- code coverage -->
     <filter>
         <whitelist>
             <directory suffix=".php">./</directory>
@@ -22,11 +22,6 @@
     </filter>
 
     <php>
-        <ini name="error_reporting" value="-1"/>
         <ini name="date.timezone" value="UTC"/>
     </php>
-
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
 </phpunit>
