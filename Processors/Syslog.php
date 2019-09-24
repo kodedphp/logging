@@ -1,6 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Koded package.
+ *
+ * (c) Mihail Binev <mihail@kodeart.com>
+ *
+ * Please view the LICENSE distributed with this source code
+ * for the full copyright and license information.
+ *
+ */
+
 namespace Koded\Logging\Processors;
+
+use Koded\Logging\Logger;
 
 /**
  * System log.
@@ -9,25 +21,26 @@ namespace Koded\Logging\Processors;
  */
 class Syslog extends Processor
 {
-
-    /**
-     * The syslog ident string added to each message.
-     */
-    const IDENT = 'KODED';
-
     protected $format = '[levelname] message';
 
-    public function update(array $messages)
+    protected function parse(array $message): void
     {
-        if (count($messages)) {
-            openlog(self::IDENT, LOG_PID | LOG_CONS, LOG_USER);
-            parent::update($messages);
+        $levels = [
+            Logger::DEBUG     => LOG_DEBUG,
+            Logger::INFO      => LOG_INFO,
+            Logger::NOTICE    => LOG_NOTICE,
+            Logger::WARNING   => LOG_WARNING,
+            Logger::ERROR     => LOG_ERR,
+            Logger::CRITICAL  => LOG_CRIT,
+            Logger::ALERT     => LOG_ALERT,
+            Logger::EMERGENCY => LOG_EMERG
+        ];
+
+        try {
+            openlog(null, LOG_CONS, LOG_USER);
+            syslog($levels[$message['level']] ?? LOG_DEBUG, strtr($this->format, $message));
+        } finally {
             closelog();
         }
-    }
-
-    protected function parse(array $message)
-    {
-        syslog($message['level'], strtr($this->format, $message));
     }
 }
