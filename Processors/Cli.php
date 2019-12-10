@@ -27,13 +27,13 @@ class Cli extends Processor
     public function __construct(array $settings)
     {
         parent::__construct($settings);
-        $this->buffer = defined('STDOUT');
+        $this->buffer = defined('STDERR');
     }
 
     protected function parse(array $message): void
     {
         if ($this->buffer) {
-            fwrite(STDOUT, strtr($this->format, $message) . PHP_EOL);
+            fwrite(STDERR, strtr($this->format, $message) . PHP_EOL);
         }
     }
 }
