@@ -130,7 +130,7 @@ class Log implements Logger
             'level'     => $level,
             'levelname' => $levelname,
             'message'   => $this->formatMessage($message, $context),
-            'timestamp' => date_create_immutable('now', timezone_open($this->timezone))->format($this->dateFormat),
+            'timestamp' => date_create_immutable('now', timezone_open($this->timezone) ?: null)->format($this->dateFormat),
         ];
 
         $this->deferred || $this->process();
