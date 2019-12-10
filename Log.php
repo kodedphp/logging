@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Koded package.
+ *
+ * (c) Mihail Binev <mihail@kodeart.com>
+ *
+ * Please view the LICENSE distributed with this source code
+ * for the full copyright and license information.
+ *
+ */
+
 namespace Koded\Logging;
 
-use DateTime;
-use DateTimeZone;
-use Koded\Logging\Processors\{ ErrorLog, Processor };
+use Koded\Logging\Processors\{Cli, Processor};
 use Psr\Log\LoggerTrait;
 use Throwable;
 
@@ -16,24 +24,30 @@ use Throwable;
  *
  *  CONFIGURATION PARAMETERS (Log class)
  *
+ *      -   deferred (bool)         [optional], default: false
+ *          A flag to set the Log instance how to dump messages.
+ *          Set to TRUE if you want to process all accumulated messages
+ *          at shutdown time. Otherwise, the default behavior is to process
+ *          the message immediately after the LoggerInterface method is called.
+ *
  *      -   loggers (array)
  *          An array of log processors. Every processor is defined in array with it's own
  *          configuration parameters, but ALL must have the following:
  *
- *      -   class       (string)    [required]
- *          The name of the log processor class.
- *          Can create multiple same instances with different config
- *          parameters.
+ *          -   class       (string)    [required]
+ *              The name of the log processor class.
+ *              Can create multiple same instances with different config
+ *              parameters.
  *
- *      -   levels      (integer)    [optional], default: -1 (for all levels)
- *          Packed integer for bitwise comparison. See the constants in this
- *          class.
+ *          -   levels      (integer)    [optional], default: -1 (for all levels)
+ *              Packed integer for bitwise comparison. See the constants in this
+ *              class.
  *
- *          Example: Log::INFO | Log::ERROR | Log::ALERT
- *          Processor with these log levels will store only
- *          info, error and warning type messages.
+ *              Example: Log::INFO | Log::ERROR | Log::ALERT
+ *              Processor with these log levels will store only
+ *              info, error and warning type messages.
  *
- *      -   dateformat  (string)    [optional], default: d/m/Y H:i:s
+ *      -   dateformat  (string)    [optional], default: d/m/Y H:i:s.u
  *          The date format for the log message.
  *
  *      -   timezone    (string)    [optional], default: UTC
@@ -41,13 +55,17 @@ use Throwable;
  *
  *
  *  CONFIGURATION PARAMETERS (Processor class)
- *  Every processor has it's own specific parameters (with the above directives).
+ *  Every processor may have it's own specific parameters.
  *
  */
 class Log implements Logger
 {
-
     use LoggerTrait;
+
+    /**
+     * @var bool Flag to control the messages processing
+     */
+    private $deferred = false;
 
     /**
      * @var string The date format for the message.
@@ -76,26 +94,28 @@ class Log implements Logger
      */
     public function __construct(array $settings)
     {
-        $this->dateFormat = $settings['dateformat'] ?? 'd/m/Y H:i:s';
-        $this->timezone = $settings['timezone'] ?? $this->timezone;
+        $this->deferred = (bool)($settings['deferred'] ?? false);
+        $this->dateFormat = (string)($settings['dateformat'] ?? 'd/m/Y H:i:s.u');
+        $this->timezone = (string)($settings['timezone'] ?? $this->timezone);
 
-        // Build and attach all requested processors
-        foreach ($settings['loggers'] ?? [] as $processor) {
+        foreach ((array)($settings['loggers'] ?? []) as $processor) {
             $this->attach(new $processor['class']($processor));
+        }
+
+        if ($this->deferred) {
+            register_shutdown_function([$this, 'process']);
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function register()
+    public function attach(Processor $processor): Logger
     {
-        register_shutdown_function([$this, 'process']);
+        if (0 !== $processor->levels()) {
+            $this->processors[spl_object_hash($processor)] = $processor;
+        }
+
+        return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function log($level, $message, array $context = [])
     {
         try {
@@ -106,38 +126,35 @@ class Log implements Logger
             $level = -1;
         }
 
-        $microtime = microtime(true);
-
         $this->messages[] = [
-            'level' => $level,
+            'level'     => $level,
             'levelname' => $levelname,
-            'message' => $this->formatMessage($message, $context),
-            'timestamp' => (
-                (new DateTime(null, new DateTimeZone('UTC')))
-                    ->setTimestamp($microtime)
-                    ->format($this->dateFormat)
-                ) . substr(sprintf('%.6F', $microtime), -7)
+            'message'   => $this->formatMessage($message, $context),
+            'timestamp' => date_create_immutable('now', timezone_open($this->timezone))->format($this->dateFormat),
         ];
+
+        $this->deferred || $this->process();
     }
 
     /**
-     * {@inheritdoc}
+     * Parses the message as in the interface specification.
+     *
+     * @param string|object $message A string or object that implements __toString
+     * @param array         $params  [optional] Arbitrary data with key-value pairs replacements
+     *
+     * @return string
      */
-    public function exception(Throwable $e, Processor $processor = null)
+    private function formatMessage($message, array $params = []): string
     {
-        $syslog = $processor ?? new ErrorLog([]);
-        $message = $e->getMessage() . PHP_EOL . ' -- [Trace]: ' . $e->getTraceAsString();
+        $replacements = [];
+        foreach ($params as $k => $v) {
+            $replacements['{' . $k . '}'] = $v;
+        }
 
-        $this->attach($syslog);
-        $this->alert($message);
-        $this->process();
-        $this->detach($syslog);
+        return strtr((string)$message, $replacements);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function process()
+    public function process(): void
     {
         foreach ($this->processors as $processor) {
             $processor->update($this->messages);
@@ -146,51 +163,20 @@ class Log implements Logger
         $this->messages = [];
     }
 
-    /**
-     * Add a log processor in the stack.
-     *
-     * @param Processor $processor Logger processor instance
-     *
-     * @return Log
-     */
-    public function attach(Processor $processor): Log
+    public function exception(Throwable $e, Processor $processor = null): void
     {
-        if (0 !== $processor->levels()) {
-            $this->processors[spl_object_hash($processor)] = $processor;
-        }
+        $logger = $processor ?? new Cli([]);
+        $message = $e->getMessage() . PHP_EOL . ' -- [Trace]: ' . $e->getTraceAsString();
 
-        return $this;
+        $this->attach($logger)->critical($message);
+        $this->process();
+        $this->detach($logger);
     }
 
-    /**
-     * Detach a log processor from registered processors.
-     *
-     * @param Processor $processor The log processor to detach from the stack.
-     *
-     * @return Log
-     */
-    public function detach(Processor $processor): Log
+    public function detach(Processor $processor): Logger
     {
         unset($this->processors[spl_object_hash($processor)]);
 
         return $this;
-    }
-
-    /**
-     * Parses the message as in the interface specification.
-     *
-     * @param string|object $message A string or object that implements __toString
-     * @param array $context [optional] Arbitrary data with key-value pairs replacements
-     *
-     * @return string
-     */
-    private function formatMessage($message, array $context = []): string
-    {
-        $replacements = [];
-        foreach ($context as $k => $v) {
-            $replacements['{' . $k . '}'] = $v;
-        }
-
-        return strtr((string)$message, $replacements);
     }
 }

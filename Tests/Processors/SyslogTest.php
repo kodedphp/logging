@@ -15,9 +15,13 @@ class SyslogTest extends TestCase
         $processor->update([
             [
                 'level' => Logger::DEBUG,
-                'levelname' => 'TEST',
-                'message' => 'Hello',
+                'message' => 'Syslog 1',
                 'timestamp' => 1234567890
+            ],
+            [
+                'level' => Logger::DEBUG,
+                'message' => 'Syslog 2',
+                'timestamp' => 1234567891
             ]
         ]);
 

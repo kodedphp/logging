@@ -16,8 +16,14 @@ class CliTest extends TestCase
             [
                 'level' => Logger::DEBUG,
                 'levelname' => 'TEST',
-                'message' => 'Hello',
+                'message' => 'Cli 1',
                 'timestamp' => 1234567890
+            ],
+            [
+                'level' => Logger::DEBUG,
+                'levelname' => 'TEST',
+                'message' => 'Cli 2',
+                'timestamp' => 1234567891
             ]
         ]);
 

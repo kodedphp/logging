@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class LogConstructorTest extends TestCase
 {
-
     public function test_construction_with_config_array()
     {
         $log = new Log([
@@ -25,9 +24,9 @@ class LogConstructorTest extends TestCase
     public function test_construction_without_config()
     {
         $log = new Log([]);
-        $this->assertAttributeSame('d/m/Y H:i:s', 'dateFormat', $log);
-        $this->assertAttributeSame('UTC', 'timezone', $log);
 
-        $log->register();
+        $this->assertAttributeSame(false, 'deferred', $log);
+        $this->assertAttributeSame('d/m/Y H:i:s.u', 'dateFormat', $log);
+        $this->assertAttributeSame('UTC', 'timezone', $log);
     }
 }

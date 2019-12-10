@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Koded package.
+ *
+ * (c) Mihail Binev <mihail@kodeart.com>
+ *
+ * Please view the LICENSE distributed with this source code
+ * for the full copyright and license information.
+ *
+ */
+
 namespace Koded\Logging\Processors;
 
 /**
@@ -8,34 +18,22 @@ namespace Koded\Logging\Processors;
  */
 class Cli extends Processor
 {
-
-    /**
-     * @var string Message format
-     */
+    /** @var string Message format */
     protected $format = '> [timestamp][levelname] - message';
 
-    /**
-     * @var resource STDOUT
-     */
+    /** @var bool */
     private $buffer;
 
     public function __construct(array $settings)
     {
         parent::__construct($settings);
-        defined('STDOUT') and $this->buffer = STDOUT;
+        $this->buffer = defined('STDERR');
     }
 
-    public function update(array $messages)
+    protected function parse(array $message): void
     {
         if ($this->buffer) {
-            fflush($this->buffer);
-            parent::update($messages);
+            fwrite(STDERR, strtr($this->format, $message) . PHP_EOL);
         }
-    }
-
-    protected function parse(array $message)
-    {
-        $message['levelname'] = str_pad($message['levelname'], 11, ' ', STR_PAD_BOTH);
-        fwrite($this->buffer, strtr($this->format, $message) . PHP_EOL);
     }
 }

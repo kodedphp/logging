@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Koded package.
+ *
+ * (c) Mihail Binev <mihail@kodeart.com>
+ *
+ * Please view the LICENSE distributed with this source code
+ * for the full copyright and license information.
+ *
+ */
+
 namespace Koded\Logging\Processors;
 
 /**
@@ -8,7 +18,6 @@ namespace Koded\Logging\Processors;
  */
 abstract class Processor
 {
-
     /**
      * @var int Packed integer for all log levels. If not specified, all levels
      *      are included (by default)
@@ -18,7 +27,7 @@ abstract class Processor
     /**
      * @var string The log message format.
      */
-    protected $format = '[timestamp] levelname: message';
+    protected $format = 'timestamp [levelname]: message';
 
     /**
      * @var string Keeps all formatted log messages in this property.
@@ -42,7 +51,7 @@ abstract class Processor
      *
      * @return void
      */
-    public function update(array $messages)
+    public function update(array $messages): void
     {
         foreach ($messages as $message) {
             if ($message['level'] & $this->levels) {
@@ -59,7 +68,7 @@ abstract class Processor
      *
      * @return void
      */
-    abstract protected function parse(array $message);
+    abstract protected function parse(array $message): void;
 
     /**
      * Returns all enabled log levels for the processor object.
