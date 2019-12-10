@@ -63,15 +63,12 @@ class File extends Processor
             $dir = $this->dir . date('Y/m');
             is_dir($dir) || mkdir($dir, 0775, true);
 
-            file_put_contents(
-                $dir . '/' . date('d') . $this->ext,
-                strtr($this->format, $message) . PHP_EOL,
-                FILE_APPEND
-            );
+            file_put_contents($dir . '/' . date('d') . $this->ext, strtr($this->format, $message) . PHP_EOL,
+                FILE_APPEND);
 
             // @codeCoverageIgnoreStart
         } catch (Exception $e) {
-            \error_log(__METHOD__, $e->getMessage(), null);
+            \error_log($e->getMessage());
             // @codeCoverageIgnoreEnd
         }
     }
@@ -81,8 +78,7 @@ class File extends Processor
 class FileProcessorException extends KodedException
 {
     private const
-        E_DIRECTORY_DOES_NOT_EXIST = 1,
-        E_DIRECTORY_NOT_WRITABLE   = 2;
+        E_DIRECTORY_DOES_NOT_EXIST = 1, E_DIRECTORY_NOT_WRITABLE = 2;
 
     protected $messages = [
         self::E_DIRECTORY_DOES_NOT_EXIST => 'Log directory ":dir" must exist',
