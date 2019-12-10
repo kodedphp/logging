@@ -43,7 +43,7 @@ class File extends Processor
 
         umask(umask() | 0002);
         $this->ext = (string)($settings['extension'] ?? '.log');
-        $this->dir = rtrim((string)$settings['dir'], '/') . '/';
+        $this->dir = rtrim((string)$settings['dir'], '/');
 
         if (false === is_dir($this->dir)) {
             throw FileProcessorException::directoryDoesNotExist($this->dir);
@@ -52,6 +52,8 @@ class File extends Processor
         if (false === is_writable($this->dir)) {
             throw FileProcessorException::directoryIsNotWritable($this->dir);
         }
+
+        $this->dir .= '/';
     }
 
     protected function parse(array $message): void
