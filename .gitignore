@@ -5,5 +5,4 @@ vendor/
 .idea/
 composer.lock
 *.phar
-*.yml
-!.scrutinizer.yml
+*.cache
