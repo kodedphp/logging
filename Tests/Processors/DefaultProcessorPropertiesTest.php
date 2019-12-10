@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class DefaultProcessorPropertiesTest extends TestCase
 {
-
     public function test_defaults()
     {
         $processor = new Memory([]);

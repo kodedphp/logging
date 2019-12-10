@@ -51,7 +51,7 @@ class LogDeferredTest extends TestCase
         $this->assertSame('', $processor->formatted());
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->SUT = new Log([
             'deferred' => true,

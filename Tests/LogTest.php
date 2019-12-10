@@ -42,9 +42,9 @@ class LogTest extends TestCase
 
         $processor->update([
             [
-                'level' => -1, // this is ignored
+                'level'     => -1, // this is ignored
                 'levelname' => 'DEBUG',
-                'message' => 'Hello',
+                'message'   => 'Hello',
                 'timestamp' => 1234567890
             ]
         ]);
@@ -57,11 +57,11 @@ class LogTest extends TestCase
         $processor = new Memory([]);
         $this->SUT->exception(new Exception('The message', 1), $processor);
 
-        $this->assertAttributeContains('[CRITICAL]', 'formatted', $processor);
-        $this->assertAttributeContains('The message', 'formatted', $processor);
+         $this->assertAttributeContains('[CRITICAL]', 'formatted', $processor);
+         $this->assertAttributeContains('The message', 'formatted', $processor);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->SUT = new Log([]);
     }

@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class LogConstructorTest extends TestCase
 {
-
     public function test_construction_with_config_array()
     {
         $log = new Log([

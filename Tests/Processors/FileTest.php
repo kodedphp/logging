@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class FileTest extends TestCase
 {
-
     /**
      * @var vfsStreamDirectory
      */
@@ -21,15 +20,15 @@ class FileTest extends TestCase
         $processor = new File(['dir' => $this->dir->url()]);
         $processor->update([
             [
-                'level' => -1,
+                'level'     => -1,
                 'levelname' => 'DEBUG',
-                'message' => 'Test 1',
+                'message'   => 'Test 1',
                 'timestamp' => 1234567890
             ],
             [
-                'level' => -1,
+                'level'     => -1,
                 'levelname' => 'DEBUG',
-                'message' => 'Test 2',
+                'message'   => 'Test 2',
                 'timestamp' => 1234567891
             ]
         ]);
@@ -38,12 +37,12 @@ class FileTest extends TestCase
         $this->assertTrue($this->dir->hasChild($subdirectory));
 
         $content = $this->dir->getChild($subdirectory . DIRECTORY_SEPARATOR . $file)->getContent();
-        $this->assertContains("1234567891 [DEBUG]: Test 2\n", $content);
+        $this->assertStringContainsString("1234567891 [DEBUG]: Test 2\n", $content);
     }
 
     public function test_when_directory_does_not_exist()
     {
-        $dir = $this->dir->url() . '/nonexistent/';
+        $dir = $this->dir->url() . '/nonexistent';
 
         $this->expectException(FileProcessorException::class);
         $this->expectExceptionMessage('Log directory "' . $dir . '" must exist');
@@ -57,14 +56,14 @@ class FileTest extends TestCase
         $dir = $this->dir->url();
 
         $this->expectException(FileProcessorException::class);
-        $this->expectExceptionMessage('Log directory "' . $dir . '/" must be writable');
+        $this->expectExceptionMessage('Log directory "' . $dir . '" must be writable');
 
         vfsStreamWrapper::getRoot()->chmod(0400);
         $processor = new File(['dir' => $dir]);
         $processor->update([]);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dir = vfsStream::setup();
     }
