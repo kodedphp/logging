@@ -27,4 +27,5 @@ script:
   - vendor/bin/phpunit --coverage-clover build/clover.xml
 
 after_script:
-  - travis_retry vendor/bin/ocular code-coverage:upload --format=php-clover build/clover.xml
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover build/clover.xml
