@@ -82,8 +82,8 @@ Every processor will filter out the messages as defined in it's **levels** direc
 For instance, to log only WARNING, INFO and ERROR messages, set levels to
 
 ```php
-
 <?php
+
 [..., ['levels' => Log::WARN | Log::INFO | Log::ERROR, ...]],
 ```
 
@@ -103,6 +103,15 @@ Processors
 | Memory            | will store all messages in an array. Useful for unit tests if the logger is involved |
 | SysLog **(slow)** | will open the system logger and send messages using the [syslog()][syslog] function  |
 | File **(slow)**   | saves the messages on a disk                                                         |
+
+
+Benchmarks and tests
+--------------------
+
+```shell script
+vendor/bin/phpbench run --report=default
+vendor/bin/phpunit
+```
 
 
 License
