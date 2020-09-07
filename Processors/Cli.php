@@ -22,18 +22,18 @@ class Cli extends Processor
     protected $format = '> [timestamp][levelname] - message';
 
     /** @var bool */
-    private $buffer;
+    //private $buffer;
 
     public function __construct(array $settings)
     {
         parent::__construct($settings);
-        $this->buffer = defined('STDERR');
+        //$this->buffer = defined('STDERR');
     }
 
     protected function process(array $message): void
     {
-        if ($this->buffer) {
+        //if ($this->buffer) {
             fwrite(STDERR, strtr($this->format, $message) . PHP_EOL);
-        }
+        //}
     }
 }
