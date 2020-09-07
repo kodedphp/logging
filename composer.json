@@ -21,7 +21,7 @@
   "require": {
     "php": "^7.2",
     "psr/log": "~1",
-    "koded/stdlib": "~4"
+    "koded/stdlib": "~4|5.*"
   },
   "autoload": {
     "psr-4": {
