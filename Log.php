@@ -73,9 +73,9 @@ class Log implements Logger
     private $dateFormat;
 
     /**
-     * @var string Valid timezone for the message.
+     * @var \DateTimeZone Valid timezone for the message.
      */
-    private $timezone = 'UTC';
+    private $timezone;
 
     /**
      * @var Processor[] Hash with all registered log processors.
@@ -96,7 +96,10 @@ class Log implements Logger
     {
         $this->deferred = (bool)($settings['deferred'] ?? false);
         $this->dateFormat = (string)($settings['dateformat'] ?? 'd/m/Y H:i:s.u');
-        $this->timezone = (string)($settings['timezone'] ?? $this->timezone);
+
+        if (false === $this->timezone = @timezone_open((string)($settings['timezone'] ?? 'UTC'))) {
+            $this->timezone = timezone_open('UTC');
+        }
 
         foreach ((array)($settings['loggers'] ?? []) as $processor) {
             $this->attach(new $processor['class']($processor));
@@ -130,10 +133,34 @@ class Log implements Logger
             'level'     => $level,
             'levelname' => $levelname,
             'message'   => $this->formatMessage($message, $context),
-            'timestamp' => date_create_immutable('now', timezone_open($this->timezone) ?: null)->format($this->dateFormat),
+            'timestamp' => date_create_immutable('now', $this->timezone ?: null)->format($this->dateFormat),
         ];
 
         $this->deferred || $this->process();
+    }
+
+    public function process(): void
+    {
+        foreach ($this->processors as $processor) {
+            $processor->update($this->messages);
+        }
+        $this->messages = [];
+    }
+
+    public function exception(Throwable $e, Processor $processor = null): void
+    {
+        $logger = $processor ?? new Cli([]);
+        $message = $e->getMessage() . PHP_EOL . ' -- [Trace]: ' . $e->getTraceAsString();
+
+        $this->attach($logger)->critical($message);
+        $this->process();
+        $this->detach($logger);
+    }
+
+    public function detach(Processor $processor): Logger
+    {
+        unset($this->processors[spl_object_hash($processor)]);
+        return $this;
     }
 
     /**
@@ -152,31 +179,5 @@ class Log implements Logger
         }
 
         return strtr((string)$message, $replacements);
-    }
-
-    public function process(): void
-    {
-        foreach ($this->processors as $processor) {
-            $processor->update($this->messages);
-        }
-
-        $this->messages = [];
-    }
-
-    public function exception(Throwable $e, Processor $processor = null): void
-    {
-        $logger = $processor ?? new Cli([]);
-        $message = $e->getMessage() . PHP_EOL . ' -- [Trace]: ' . $e->getTraceAsString();
-
-        $this->attach($logger)->critical($message);
-        $this->process();
-        $this->detach($logger);
-    }
-
-    public function detach(Processor $processor): Logger
-    {
-        unset($this->processors[spl_object_hash($processor)]);
-
-        return $this;
     }
 }
