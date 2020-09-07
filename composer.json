@@ -18,10 +18,11 @@
     }
   ],
   "prefer-stable": true,
+  "minimum-stability": "dev",
   "require": {
-    "php": "^7.2",
+    "php": ">=7.2.5|^8",
     "psr/log": "~1",
-    "koded/stdlib": "~4|5.*"
+    "koded/stdlib": "5.*"
   },
   "autoload": {
     "psr-4": {
@@ -38,7 +39,12 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Koded\\Logging\\": "Tests/"
+      "Koded\\Logging\\Tests\\": "Tests/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "3.x-dev"
     }
   }
 }
