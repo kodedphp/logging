@@ -1,7 +1,8 @@
 <?php
 
-namespace Koded\Logging\Processors;
+namespace Koded\Logging\Tests\Processors;
 
+use Koded\Logging\Processors\Memory;
 use PHPUnit\Framework\TestCase;
 
 class MemoryTest extends TestCase

@@ -1,7 +1,8 @@
 <?php
 
-namespace Koded\Logging\Processors;
+namespace Koded\Logging\Tests\Processors;
 
+use Koded\Logging\Processors\{File, FileProcessorException};
 use org\bovigo\vfs\{vfsStream, vfsStreamDirectory, vfsStreamWrapper};
 use PHPUnit\Framework\TestCase;
 

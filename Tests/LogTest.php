@@ -1,37 +1,38 @@
 <?php
 
-namespace Koded\Logging;
+namespace Koded\Logging\Tests;
 
 use Exception;
+use Koded\Logging\Log;
 use Koded\Logging\Processors\Memory;
 use PHPUnit\Framework\TestCase;
 
 class LogTest extends TestCase
 {
-    /**
-     * @var Log
-     */
-    private $SUT;
+    use LoggerAttributeTrait;
+
+    private $log;
 
     public function test_default_setup()
     {
-        $this->assertAttributeSame(false, 'deferred', $this->SUT);
-        $this->assertAttributeSame('d/m/Y H:i:s.u', 'dateFormat', $this->SUT);
-        $this->assertAttributeSame('UTC', 'timezone', $this->SUT);
-        $this->assertAttributeEmpty('processors', $this->SUT);
-        $this->assertAttributeEmpty('messages', $this->SUT);
+        $this->assertSame(false, $this->property($this->log, 'deferred'));
+        $this->assertSame('d/m/Y H:i:s.u', $this->property($this->log, 'dateFormat'));
+        $this->assertSame('UTC', $this->property($this->log, 'timezone')->getName());
+
+        $this->assertEmpty($this->property($this->log, 'processors'));
+        $this->assertEmpty($this->property($this->log, 'messages'));
     }
 
     public function test_attach_and_detach()
     {
         $processor = new Memory([]);
-        $this->assertAttributeCount(0, 'processors', $this->SUT);
+        $this->assertCount(0, $this->property($this->log, 'processors'));
 
-        $this->SUT->attach($processor);
-        $this->assertAttributeCount(1, 'processors', $this->SUT);
+        $this->log->attach($processor);
+        $this->assertCount(1, $this->property($this->log, 'processors'));
 
-        $this->SUT->detach($processor);
-        $this->assertAttributeCount(0, 'processors', $this->SUT);
+        $this->log->detach($processor);
+        $this->assertCount(0, $this->property($this->log, 'processors'));
     }
 
     public function test_log_suppression()
@@ -42,7 +43,7 @@ class LogTest extends TestCase
 
         $processor->update([
             [
-                'level'     => -1, // this is ignored
+                'level'     => -1, // this message is ignored
                 'levelname' => 'DEBUG',
                 'message'   => 'Hello',
                 'timestamp' => 1234567890
@@ -55,14 +56,14 @@ class LogTest extends TestCase
     public function test_exception()
     {
         $processor = new Memory([]);
-        $this->SUT->exception(new Exception('The message', 1), $processor);
+        $this->log->exception(new Exception('The message', 1), $processor);
 
-         $this->assertAttributeContains('[CRITICAL]', 'formatted', $processor);
-         $this->assertAttributeContains('The message', 'formatted', $processor);
+        $this->assertContains('[CRITICAL]', $this->property($processor, 'formatted'));
+        $this->assertContains('The message', $this->property($processor, 'formatted'));
     }
 
     protected function setUp(): void
     {
-        $this->SUT = new Log([]);
+        $this->log = new Log([]);
     }
 }
