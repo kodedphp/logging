@@ -55,7 +55,7 @@ abstract class Processor
     {
         foreach ($messages as $message) {
             if ($message['level'] & $this->levels) {
-                $this->parse($message);
+                $this->process($message);
             }
         }
     }
@@ -68,7 +68,7 @@ abstract class Processor
      *
      * @return void
      */
-    abstract protected function parse(array $message): void;
+    abstract protected function process(array $message): void;
 
     /**
      * Returns all enabled log levels for the processor object.

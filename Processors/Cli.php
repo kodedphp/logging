@@ -30,7 +30,7 @@ class Cli extends Processor
         $this->buffer = defined('STDERR');
     }
 
-    protected function parse(array $message): void
+    protected function process(array $message): void
     {
         if ($this->buffer) {
             fwrite(STDERR, strtr($this->format, $message) . PHP_EOL);

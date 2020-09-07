@@ -56,7 +56,7 @@ class File extends Processor
         $this->dir .= '/';
     }
 
-    protected function parse(array $message): void
+    protected function process(array $message): void
     {
         try {
             // The filename should be calculated at the moment of writing

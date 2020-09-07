@@ -23,7 +23,7 @@ class Syslog extends Processor
 {
     protected $format = '[levelname] message';
 
-    protected function parse(array $message): void
+    protected function process(array $message): void
     {
         $levels = [
             Logger::DEBUG     => LOG_DEBUG,
