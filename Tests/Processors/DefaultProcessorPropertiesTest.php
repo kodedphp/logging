@@ -1,10 +1,10 @@
 <?php
 
-namespace Koded\Logging\Tests\Processors;
+namespace Tests\Koded\Logging\Processors;
 
 use Koded\Logging\Logger;
 use Koded\Logging\Processors\Memory;
-use Koded\Logging\Tests\LoggerAttributeTrait;
+use Tests\Koded\Logging\LoggerAttributeTrait;
 use PHPUnit\Framework\TestCase;
 
 class DefaultProcessorPropertiesTest extends TestCase

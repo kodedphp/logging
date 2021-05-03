@@ -1,6 +1,6 @@
 <?php
 
-namespace Koded\Logging\Tests;
+namespace Tests\Koded\Logging;
 
 use Exception;
 use Koded\Logging\Log;
@@ -11,7 +11,7 @@ class LogTest extends TestCase
 {
     use LoggerAttributeTrait;
 
-    private $log;
+    private Log $log;
 
     public function test_default_setup()
     {
@@ -58,8 +58,8 @@ class LogTest extends TestCase
         $processor = new Memory([]);
         $this->log->exception(new Exception('The message', 1), $processor);
 
-        $this->assertContains('[CRITICAL]', $this->property($processor, 'formatted'));
-        $this->assertContains('The message', $this->property($processor, 'formatted'));
+        $this->assertStringContainsString('[CRITICAL]', $this->property($processor, 'formatted'));
+        $this->assertStringContainsString('The message', $this->property($processor, 'formatted'));
     }
 
     protected function setUp(): void

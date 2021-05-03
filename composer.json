@@ -21,7 +21,7 @@
   "minimum-stability": "dev",
   "require": {
     "php": "^8",
-    "psr/log": "~1",
+    "psr/log": "^1",
     "koded/stdlib": "5.*"
   },
   "autoload": {
@@ -33,13 +33,13 @@
     ]
   },
   "require-dev": {
-    "phpunit/phpunit": "~8",
-    "mikey179/vfsstream": "~1",
+    "phpunit/phpunit": "^9",
+    "mikey179/vfsstream": "^1",
     "phpbench/phpbench": "@dev"
   },
   "autoload-dev": {
     "psr-4": {
-      "Koded\\Logging\\Tests\\": "Tests/"
+      "Tests\\Koded\\Logging\\": "Tests/"
     }
   },
   "extra": {

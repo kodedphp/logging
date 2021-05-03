@@ -1,6 +1,6 @@
 <?php
 
-namespace Koded\Logging\Tests;
+namespace Tests\Koded\Logging;
 
 use DateTimeZone;
 use Koded\Logging\Log;

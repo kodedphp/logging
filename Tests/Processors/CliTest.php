@@ -1,6 +1,6 @@
 <?php
 
-namespace Koded\Logging\Tests\Processors;
+namespace Tests\Koded\Logging\Processors;
 
 use Koded\Logging\Logger;
 use Koded\Logging\Processors\Cli;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Koded\Logging\Tests\PhpBench;
+namespace Tests\Koded\Logging\PhpBench;
 
 use Koded\Logging\Processors\File;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Koded\Logging\Tests;
+namespace Tests\Koded\Logging;
 
 use Koded\Logging\Log;
 use Koded\Logging\Processors\Memory;
@@ -10,7 +10,7 @@ class LogDeferredTest extends TestCase
 {
     use LoggerAttributeTrait;
 
-    private $log;
+    private Log $log;
 
     public function test_message_block()
     {

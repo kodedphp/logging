@@ -1,6 +1,6 @@
 <?php
 
-namespace Koded\Logging\Tests\Processors;
+namespace Tests\Koded\Logging\Processors;
 
 use Koded\Logging\Processors\Memory;
 use PHPUnit\Framework\TestCase;
@@ -26,6 +26,6 @@ class MemoryTest extends TestCase
             ]
         ]);
 
-        $this->assertContains("1234567890 [TEST]: Hello\n1234567891 [TEST]: World", $processor->formatted());
+        $this->assertStringContainsString("1234567890 [TEST]: Hello\n1234567891 [TEST]: World", $processor->formatted());
     }
 }

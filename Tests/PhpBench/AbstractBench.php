@@ -1,6 +1,6 @@
 <?php
 
-namespace Koded\Logging\Tests\PhpBench;
+namespace Tests\Koded\Logging\PhpBench;
 
 use Koded\Logging\Log;
 
@@ -11,10 +11,7 @@ use Koded\Logging\Log;
  */
 abstract class AbstractBench
 {
-    /**
-     * @var Log
-     */
-    protected $log;
+    protected ?Log $log;
 
     public function setUp(): void
     {
