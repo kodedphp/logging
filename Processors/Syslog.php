@@ -21,7 +21,7 @@ use Koded\Logging\Logger;
  */
 class Syslog extends Processor
 {
-    protected $format = '[levelname] message';
+    protected string $format = '[levelname] message';
 
     protected function process(array $message): void
     {
@@ -37,10 +37,10 @@ class Syslog extends Processor
         ];
 
         try {
-            openlog(null, LOG_CONS, LOG_USER);
-            syslog($levels[$message['level']] ?? LOG_DEBUG, strtr($this->format, $message));
+            \openlog(null, LOG_CONS, LOG_USER);
+            \syslog($levels[$message['level']] ?? LOG_DEBUG, \strtr($this->format, $message));
         } finally {
-            closelog();
+            \closelog();
         }
     }
 }

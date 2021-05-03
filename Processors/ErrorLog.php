@@ -20,6 +20,6 @@ class ErrorLog extends Processor
 {
     protected function process(array $message): void
     {
-        error_log(strtr($this->format, $message), 0);
+        \error_log(strtr($this->format, $message), 0);
     }
 }

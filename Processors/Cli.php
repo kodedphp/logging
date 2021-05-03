@@ -13,13 +13,12 @@
 namespace Koded\Logging\Processors;
 
 /**
- * Log processor for CLI apps.
+ * Log processor for CLI.
  *
  */
 class Cli extends Processor
 {
-    /** @var string Message format */
-    protected $format = '> [timestamp][levelname] - message';
+    protected string $format = '> [timestamp][levelname] - message';
 
     /** @var resource */
     private $handle;
@@ -27,11 +26,11 @@ class Cli extends Processor
     public function __construct(array $settings)
     {
         parent::__construct($settings);
-        $this->handle = defined('STDERR') ? STDERR : fopen('php://stderr', 'w');
+        $this->handle = \defined('STDERR') ? STDERR : \fopen('php://stderr', 'w');
     }
 
     protected function process(array $message): void
     {
-        fwrite($this->handle, strtr($this->format, $message) . PHP_EOL);
+        \fwrite($this->handle, \strtr($this->format, $message) . PHP_EOL);
     }
 }

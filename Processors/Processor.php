@@ -27,7 +27,7 @@ abstract class Processor
     /**
      * @var string The log message format.
      */
-    protected $format = 'timestamp [levelname]: message';
+    protected string $format = 'timestamp [levelname]: message';
 
     /**
      * @var string Keeps all formatted log messages in this property.

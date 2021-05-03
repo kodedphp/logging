@@ -31,8 +31,8 @@ use Koded\Exceptions\KodedException;
  */
 class File extends Processor
 {
-    private $dir = '';
-    private $ext = '';
+    private string $dir = '';
+    private string $ext = '';
 
     /**
      * {@inheritdoc}
@@ -41,15 +41,15 @@ class File extends Processor
     {
         parent::__construct($settings);
 
-        umask(umask() | 0002);
+        \umask(\umask() | 0002);
         $this->ext = (string)($settings['extension'] ?? '.log');
-        $this->dir = rtrim((string)$settings['dir'], '/');
+        $this->dir = \rtrim((string)$settings['dir'], '/');
 
-        if (false === is_dir($this->dir)) {
+        if (false === \is_dir($this->dir)) {
             throw FileProcessorException::directoryDoesNotExist($this->dir);
         }
 
-        if (false === is_writable($this->dir)) {
+        if (false === \is_writable($this->dir)) {
             throw FileProcessorException::directoryIsNotWritable($this->dir);
         }
 
@@ -60,10 +60,10 @@ class File extends Processor
     {
         try {
             // The filename should be calculated at the moment of writing
-            $dir = $this->dir . date('Y/m');
-            is_dir($dir) || mkdir($dir, 0775, true);
+            $dir = $this->dir . \date('Y/m');
+            \is_dir($dir) || \mkdir($dir, 0775, true);
 
-            file_put_contents($dir . '/' . date('d') . $this->ext, strtr($this->format, $message) . PHP_EOL,
+            \file_put_contents($dir . '/' . \date('d') . $this->ext, \strtr($this->format, $message) . PHP_EOL,
                 FILE_APPEND);
 
             // @codeCoverageIgnoreStart
@@ -78,20 +78,21 @@ class File extends Processor
 class FileProcessorException extends KodedException
 {
     private const
-        E_DIRECTORY_DOES_NOT_EXIST = 1, E_DIRECTORY_NOT_WRITABLE = 2;
+        E_DIRECTORY_DOES_NOT_EXIST = 1,
+        E_DIRECTORY_NOT_WRITABLE = 2;
 
-    protected $messages = [
+    protected array $messages = [
         self::E_DIRECTORY_DOES_NOT_EXIST => 'Log directory ":dir" must exist',
         self::E_DIRECTORY_NOT_WRITABLE   => 'Log directory ":dir" must be writable',
     ];
 
-    public static function directoryDoesNotExist(string $directory): self
+    public static function directoryDoesNotExist(string $directory): static
     {
-        return new self(self::E_DIRECTORY_DOES_NOT_EXIST, [':dir' => $directory]);
+        return new static(static::E_DIRECTORY_DOES_NOT_EXIST, [':dir' => $directory]);
     }
 
-    public static function directoryIsNotWritable(string $directory): self
+    public static function directoryIsNotWritable(string $directory): static
     {
-        return new self(self::E_DIRECTORY_NOT_WRITABLE, [':dir' => $directory]);
+        return new static(static::E_DIRECTORY_NOT_WRITABLE, [':dir' => $directory]);
     }
 }
