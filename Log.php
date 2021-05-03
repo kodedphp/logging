@@ -13,6 +13,7 @@
 namespace Koded\Logging;
 
 use Koded\Logging\Processors\{Cli, Processor};
+use DateTimeZone;
 use Psr\Log\LoggerTrait;
 use Throwable;
 
@@ -65,27 +66,27 @@ class Log implements Logger
     /**
      * @var bool Flag to control the messages processing
      */
-    private $deferred = false;
+    private bool $deferred = false;
 
     /**
      * @var string The date format for the message.
      */
-    private $dateFormat;
+    private string $dateFormat;
 
     /**
-     * @var string Valid timezone for the message.
+     * @var DateTimeZone Valid timezone for the message.
      */
-    private $timezone = 'UTC';
+    private DateTimeZone|bool $timezone;
 
     /**
      * @var Processor[] Hash with all registered log processors.
      */
-    private $processors = [];
+    private array $processors = [];
 
     /**
      * @var array List with all accumulated messages.
      */
-    private $messages = [];
+    private array $messages = [];
 
     /**
      * Creates all requested log processors.
@@ -96,62 +97,41 @@ class Log implements Logger
     {
         $this->deferred = (bool)($settings['deferred'] ?? false);
         $this->dateFormat = (string)($settings['dateformat'] ?? 'd/m/Y H:i:s.u');
-        $this->timezone = (string)($settings['timezone'] ?? $this->timezone);
-
+        if (false === $this->timezone = @\timezone_open((string)($settings['timezone'] ?? 'UTC'))) {
+            $this->timezone = \timezone_open('UTC');
+        }
         foreach ((array)($settings['loggers'] ?? []) as $processor) {
             $this->attach(new $processor['class']($processor));
         }
-
         if ($this->deferred) {
-            register_shutdown_function([$this, 'process']);
+            \register_shutdown_function([$this, 'process']);
         }
     }
 
     public function attach(Processor $processor): Logger
     {
         if (0 !== $processor->levels()) {
-            $this->processors[spl_object_hash($processor)] = $processor;
+            $this->processors[\spl_object_hash($processor)] = $processor;
         }
-
         return $this;
     }
 
     public function log($level, $message, array $context = [])
     {
         try {
-            $levelname = strtoupper($level);
-            $level = constant('self::' . $levelname);
-        } catch (Throwable $e) {
-            $levelname = 'LOG';
+            $levelName = \strtoupper($level);
+            $level = \constant('static::' . $levelName);
+        } catch (Throwable) {
+            $levelName = 'LOG';
             $level = -1;
         }
-
         $this->messages[] = [
             'level'     => $level,
-            'levelname' => $levelname,
+            'levelname' => $levelName,
             'message'   => $this->formatMessage($message, $context),
-            'timestamp' => date_create_immutable('now', timezone_open($this->timezone) ?: null)->format($this->dateFormat),
+            'timestamp' => \date_create_immutable('now', $this->timezone ?: null)->format($this->dateFormat),
         ];
-
         $this->deferred || $this->process();
-    }
-
-    /**
-     * Parses the message as in the interface specification.
-     *
-     * @param string|object $message A string or object that implements __toString
-     * @param array         $params  [optional] Arbitrary data with key-value pairs replacements
-     *
-     * @return string
-     */
-    private function formatMessage($message, array $params = []): string
-    {
-        $replacements = [];
-        foreach ($params as $k => $v) {
-            $replacements['{' . $k . '}'] = $v;
-        }
-
-        return strtr((string)$message, $replacements);
     }
 
     public function process(): void
@@ -159,7 +139,6 @@ class Log implements Logger
         foreach ($this->processors as $processor) {
             $processor->update($this->messages);
         }
-
         $this->messages = [];
     }
 
@@ -175,8 +154,24 @@ class Log implements Logger
 
     public function detach(Processor $processor): Logger
     {
-        unset($this->processors[spl_object_hash($processor)]);
-
+        unset($this->processors[\spl_object_hash($processor)]);
         return $this;
+    }
+
+    /**
+     * Parses the message as in the interface specification.
+     *
+     * @param object|string $message A string or object that implements __toString
+     * @param array         $params  [optional] Arbitrary data with key-value pairs replacements
+     *
+     * @return string
+     */
+    private function formatMessage(object|string $message, array $params = []): string
+    {
+        $replacements = [];
+        foreach ($params as $k => $v) {
+            $replacements['{' . $k . '}'] = $v;
+        }
+        return \strtr((string)$message, $replacements);
     }
 }

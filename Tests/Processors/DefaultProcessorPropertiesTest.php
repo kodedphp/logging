@@ -1,19 +1,23 @@
 <?php
 
-namespace Koded\Logging\Processors;
+namespace Tests\Koded\Logging\Processors;
 
 use Koded\Logging\Logger;
+use Koded\Logging\Processors\Memory;
+use Tests\Koded\Logging\LoggerAttributeTrait;
 use PHPUnit\Framework\TestCase;
 
 class DefaultProcessorPropertiesTest extends TestCase
 {
+    use LoggerAttributeTrait;
+
     public function test_defaults()
     {
         $processor = new Memory([]);
 
-        $this->assertAttributeSame(-1, 'levels', $processor);
-        $this->assertAttributeSame('timestamp [levelname]: message', 'format', $processor);
-        $this->assertAttributeSame('', 'formatted', $processor);
+        $this->assertSame(-1, $this->property($processor, 'levels'));
+        $this->assertSame('timestamp [levelname]: message', $this->property($processor, 'format'));
+        $this->assertSame('', $this->property($processor, 'formatted'));
     }
 
     public function test_constructor_settings()
@@ -24,6 +28,6 @@ class DefaultProcessorPropertiesTest extends TestCase
         ]);
 
         $this->assertSame(50, $processor->levels());
-        $this->assertAttributeSame('[level] message', 'format', $processor);
+        $this->assertSame('[level] message', $this->property($processor, 'format'));
     }
 }

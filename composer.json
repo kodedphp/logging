@@ -18,27 +18,33 @@
     }
   ],
   "prefer-stable": true,
+  "minimum-stability": "dev",
   "require": {
-    "php": "^7.2",
-    "psr/log": "~1",
-    "koded/stdlib": "~4"
+    "php": "^8",
+    "psr/log": "^1",
+    "koded/stdlib": "^5"
   },
   "autoload": {
     "psr-4": {
       "Koded\\Logging\\": ""
     },
     "exclude-from-classmap": [
-      "/Tests/"
+      "Tests/"
     ]
   },
   "require-dev": {
-    "phpunit/phpunit": "^7",
-    "mikey179/vfsstream": "~1",
+    "phpunit/phpunit": "^9",
+    "mikey179/vfsstream": "^1",
     "phpbench/phpbench": "@dev"
   },
   "autoload-dev": {
     "psr-4": {
-      "Koded\\Logging\\": "Tests/"
+      "Tests\\Koded\\Logging\\": "Tests/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "3.x-dev"
     }
   }
 }

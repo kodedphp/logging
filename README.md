@@ -9,7 +9,7 @@ can be set separately and process messages based on the log level.
 [![Build Status](https://travis-ci.org/kodedphp/logging.svg?branch=master)](https://travis-ci.org/kodedphp/logging)
 [![Code Coverage](https://scrutinizer-ci.com/g/kodedphp/logging/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/kodedphp/logging/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kodedphp/logging/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kodedphp/logging/?branch=master)
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.2-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.0-8892BF.svg)](https://php.net/)
 
 
 Installation
@@ -82,8 +82,8 @@ Every processor will filter out the messages as defined in it's **levels** direc
 For instance, to log only WARNING, INFO and ERROR messages, set levels to
 
 ```php
-
 <?php
+
 [..., ['levels' => Log::WARN | Log::INFO | Log::ERROR, ...]],
 ```
 
@@ -103,6 +103,15 @@ Processors
 | Memory            | will store all messages in an array. Useful for unit tests if the logger is involved |
 | SysLog **(slow)** | will open the system logger and send messages using the [syslog()][syslog] function  |
 | File **(slow)**   | saves the messages on a disk                                                         |
+
+
+Benchmarks and tests
+--------------------
+
+```shell script
+vendor/bin/phpbench run --report=default
+vendor/bin/phpunit
+```
 
 
 License

@@ -1,13 +1,13 @@
 <?php
 
-namespace Koded\Logging\Processors;
+namespace Tests\Koded\Logging\Processors;
 
 use Koded\Logging\Logger;
+use Koded\Logging\Processors\Cli;
 use PHPUnit\Framework\TestCase;
 
 class CliTest extends TestCase
 {
-
     public function test_formatting()
     {
         $processor = new Cli([]);

@@ -18,8 +18,8 @@ namespace Koded\Logging\Processors;
  */
 class Memory extends Processor
 {
-    protected function parse(array $message): void
+    protected function process(array $message): void
     {
-        $this->formatted .= PHP_EOL . strtr($this->format, $message);
+        $this->formatted .= PHP_EOL . \strtr($this->format, $message);
     }
 }

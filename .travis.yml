@@ -1,14 +1,12 @@
 language: php
 os: linux
-dist: xenial
+dist: bionic
 
 notifications:
   email: false
 
 php:
-  - 7.2
-  - 7.3
-  - 7.4
+  - 8.0
   - nightly
 
 cache:
