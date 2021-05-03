@@ -22,14 +22,14 @@
   "require": {
     "php": "^8",
     "psr/log": "^1",
-    "koded/stdlib": "5.*"
+    "koded/stdlib": "^5"
   },
   "autoload": {
     "psr-4": {
       "Koded\\Logging\\": ""
     },
     "exclude-from-classmap": [
-      "/Tests/"
+      "Tests/"
     ]
   },
   "require-dev": {
