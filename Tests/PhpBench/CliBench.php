@@ -3,13 +3,12 @@
 namespace Tests\Koded\Logging\PhpBench;
 
 use Koded\Logging\Processors\Cli;
+use PhpBench\Attributes as Bench;
 
 class CliBench extends AbstractBench
 {
-    /**
-     * @Revs(1000)
-     * @Iterations(3)
-     */
+    #[Bench\Revs(1000)]
+    #[Bench\Iterations(5)]
     public function benchCli()
     {
         $this->log->debug(...$this->message());
@@ -25,8 +24,7 @@ class CliBench extends AbstractBench
     protected function getConfig(): array
     {
         return [
-            'deferred' => false,
-            'loggers'  => [
+            [
                 ['class' => Cli::class],
             ]
         ];

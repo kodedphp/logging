@@ -3,13 +3,12 @@
 namespace Tests\Koded\Logging\PhpBench;
 
 use Koded\Logging\Processors\File;
+use PhpBench\Attributes as Bench;
 
 class FileBench extends AbstractBench
 {
-    /**
-     * @Revs(1000)
-     * @Iterations(3)
-     */
+    #[Bench\Revs(1000)]
+    #[Bench\Iterations(3)]
     public function benchFile()
     {
         $this->log->debug(...$this->message());
@@ -25,8 +24,7 @@ class FileBench extends AbstractBench
     protected function getConfig(): array
     {
         return [
-            'deferred' => false,
-            'loggers'  => [
+            [
                 ['class' => File::class, 'dir' => sys_get_temp_dir()],
             ]
         ];

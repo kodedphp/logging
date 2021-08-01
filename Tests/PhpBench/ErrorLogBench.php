@@ -3,13 +3,12 @@
 namespace Tests\Koded\Logging\PhpBench;
 
 use Koded\Logging\Processors\ErrorLog;
+use PhpBench\Attributes as Bench;
 
 class ErrorLogBench extends AbstractBench
 {
-    /**
-     * @Revs(1000)
-     * @Iterations(3)
-     */
+    #[Bench\Revs(1000)]
+    #[Bench\Iterations(3)]
     public function benchErrorLog()
     {
         $this->log->debug(...$this->message());
@@ -25,8 +24,7 @@ class ErrorLogBench extends AbstractBench
     protected function getConfig(): array
     {
         return [
-            'deferred' => false,
-            'loggers'  => [
+            [
                 ['class' => ErrorLog::class],
             ]
         ];
