@@ -22,17 +22,17 @@ abstract class Processor
      * @var int Packed integer for all log levels. If not specified, all levels
      *      are included (by default)
      */
-    protected $levels = -1;
+    protected int $levels = -1;
 
     /**
      * @var string The log message format.
      */
-    protected string $format = 'timestamp [levelname]: message';
+    protected string $format = 'timestamp [levelname] message';
 
     /**
      * @var string Keeps all formatted log messages in this property.
      */
-    protected $formatted = '';
+    protected string $formatted = '';
 
     /**
      * @param array $settings
@@ -45,24 +45,22 @@ abstract class Processor
 
     /**
      * Receive update from the Log instance.
-     * This is where the messages are processed and saved.
+     * This is where the messages are filtered and processed.
      *
-     * @param array $messages List of all messages to be processed
+     * @param array $message The message to be processed
      *
      * @return void
      */
-    public function update(array $messages): void
+    public function update(array $message): void
     {
-        foreach ($messages as $message) {
-            if ($message['level'] & $this->levels) {
-                $this->process($message);
-            }
+        if (($message['level'] ?? -1) & $this->levels) {
+            $this->process($message);
         }
     }
 
     /**
      * The concrete implementation of the log processor where
-     * the message is parsed and delivered.
+     * the message is filtered and delivered.
      *
      * @param array $message
      *
@@ -86,11 +84,11 @@ abstract class Processor
     }
 
     /**
-     * Returns all messages in some formatted way.
+     * Returns all messages as formatted string.
      *
-     * @return mixed
+     * @return string
      */
-    public function formatted()
+    public function formatted(): string
     {
         return $this->formatted;
     }

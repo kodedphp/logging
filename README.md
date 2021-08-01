@@ -34,14 +34,13 @@ Usage
 <?php
 
 $settings = [
-    'deferred' => false,
-    'loggers' => [
+    [
         ['class' => Cli::class, 'levels' => Log::ERROR],
         ['class' => File::class, 'levels' => Log::INFO]
     ]
 ];
 
-$log = new Log($settings);
+$log = new Log(...$settings);
 
 // This message is processed by Cli and File
 $log->alert('The message with {variable}', ['variable' => 'useful info']);
@@ -55,12 +54,11 @@ $log->warning("You don't see anything");
 Configuration
 -------------
 
-| Param      | Type   | Required | Default         | Description |
-|-----------:|:------:|:--------:|:----------------|:------------|
-| loggers    | array  | yes      | (empty)         | An array of log processors. Every processor is defined in array with it's own configuration parameters. See [processor directives](processor-default-directives) |
-| dateformat | string | no       | "d/m/Y H:i:s.u" | The date format for the log message. Microseconds are prepended by default |
-| timezone   | string | no       | "UTC"           | The desired timezone for the log message |
-| deferred   | bool   | no       | false           | A flag to set the Log instance how to dump messages. Set to TRUE if you want to process all accumulated messages at shutdown time. Otherwise, the default behavior is to process the message immediately after the LoggerInterface method is called |
+| Param        | Type   | Required | Default         | Description |
+|-------------:|:------:|:--------:|:----------------|:------------|
+| (processors) | array  | yes      | (empty)         | An array of log processors. Every processor is defined in array with it's own configuration parameters. See [processor directives](processor-default-directives) |
+| dateformat   | string | no       | "d/m/Y H:i:s.u" | The date format for the log message. Microseconds are prepended by default |
+| timezone     | string | no       | "UTC"           | The desired timezone for the log message |
 
 
 ### Processor default directives
@@ -96,13 +94,13 @@ Tips:
 Processors
 ----------
 
-| Class name        | Description                                                                          |
-|------------------:|:-------------------------------------------------------------------------------------|
-| ErrorLog          | uses the [error_log()][error-log] function to send the message to PHP's logger       |
-| Cli               | write the messages in the console (with STDERR)                                      |
-| Memory            | will store all messages in an array. Useful for unit tests if the logger is involved |
-| SysLog **(slow)** | will open the system logger and send messages using the [syslog()][syslog] function  |
-| File **(slow)**   | saves the messages on a disk                                                         |
+| Class name  | Description                                                                          |
+|------------:|:-------------------------------------------------------------------------------------|
+| ErrorLog    | uses the [error_log()][error-log] function to send the message to PHP's logger       |
+| Cli         | write the messages in the console (with STDERR)                                      |
+| Memory      | will store all messages in an array. Useful for unit tests if the logger is involved |
+| SysLog      | will open the system logger and send messages using the [syslog()][syslog] function  |
+| File        | saves the messages on a disk                                                         |
 
 
 Benchmarks and tests

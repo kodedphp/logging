@@ -19,26 +19,27 @@ class FileTest extends TestCase
         $file = date('d') . '.log';
 
         $processor = new File(['dir' => $this->dir->url()]);
-        $processor->update([
+        $processor->update(
             [
                 'level'     => -1,
                 'levelname' => 'DEBUG',
                 'message'   => 'Test 1',
                 'timestamp' => 1234567890
-            ],
+            ]);
+
+        $processor->update(
             [
                 'level'     => -1,
                 'levelname' => 'DEBUG',
                 'message'   => 'Test 2',
                 'timestamp' => 1234567891
-            ]
-        ]);
+            ]);
 
         $this->assertSame('', $processor->formatted());
         $this->assertTrue($this->dir->hasChild($subdirectory));
 
         $content = $this->dir->getChild($subdirectory . DIRECTORY_SEPARATOR . $file)->getContent();
-        $this->assertStringContainsString("1234567891 [DEBUG]: Test 2\n", $content);
+        $this->assertStringContainsString("1234567891 [DEBUG] Test 2\n", $content);
     }
 
     public function test_when_directory_does_not_exist()
