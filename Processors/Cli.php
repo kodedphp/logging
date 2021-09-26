@@ -18,7 +18,7 @@ namespace Koded\Logging\Processors;
  */
 class Cli extends Processor
 {
-    protected string $format = '> [timestamp][levelname] - message';
+    protected string $format = '> [timestamp][levelname] message';
 
     /** @var resource */
     private $handle;
@@ -26,7 +26,7 @@ class Cli extends Processor
     public function __construct(array $settings)
     {
         parent::__construct($settings);
-        $this->handle = \defined('STDERR') ? STDERR : \fopen('php://stderr', 'w');
+        $this->handle = \defined('STDOUT') ? STDOUT : \fopen('php://stdout', 'w');
     }
 
     protected function process(array $message): void

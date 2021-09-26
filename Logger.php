@@ -57,21 +57,9 @@ interface Logger extends LoggerInterface
 
     /**
      * @param Throwable $e
-     * @param Processor $processor [optional]
+     * @param Processor|null $processor [optional]
      *
      * @return void
      */
     public function exception(Throwable $e, Processor $processor = null): void;
-
-    /**
-     * Run all log processors to save the accumulated messages
-     * and clean the message stack (after the method is called,
-     * the message stack is emptied).
-     *
-     * It may be called manually as well to instantly dump all messages
-     * (i.e. for Exception handling).
-     *
-     * @return void
-     */
-    public function process(): void;
 }

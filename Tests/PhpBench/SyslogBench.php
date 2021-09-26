@@ -3,13 +3,12 @@
 namespace Tests\Koded\Logging\PhpBench;
 
 use Koded\Logging\Processors\Syslog;
+use PhpBench\Attributes as Bench;
 
 class SyslogBench extends AbstractBench
 {
-    /**
-     * @Revs(1000)
-     * @Iterations(3)
-     */
+    #[Bench\Revs(1000)]
+    #[Bench\Iterations(3)]
     public function benchSyslog()
     {
         $this->log->debug(...$this->message());
@@ -25,8 +24,7 @@ class SyslogBench extends AbstractBench
     protected function getConfig(): array
     {
         return [
-            'deferred' => false,
-            'loggers'  => [
+            [
                 ['class' => Syslog::class],
             ]
         ];

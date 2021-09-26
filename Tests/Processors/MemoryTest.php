@@ -11,21 +11,22 @@ class MemoryTest extends TestCase
     {
         $processor = new Memory([]);
 
-        $processor->update([
+        $processor->update(
             [
                 'level'     => -1,
                 'levelname' => 'TEST',
                 'message'   => 'Hello',
-                'timestamp' => 1234567890
-            ],
+                'timestamp' => 12345
+            ]);
+
+        $processor->update(
             [
                 'level'     => -1,
                 'levelname' => 'TEST',
                 'message'   => 'World',
-                'timestamp' => 1234567891
-            ]
-        ]);
+                'timestamp' => 67890
+            ]);
 
-        $this->assertStringContainsString("1234567890 [TEST]: Hello\n1234567891 [TEST]: World", $processor->formatted());
+        $this->assertStringContainsString("12345 [TEST] Hello\n67890 [TEST] World", $processor->formatted());
     }
 }

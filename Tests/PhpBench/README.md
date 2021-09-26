@@ -1,3 +1,3 @@
 ```bash
-vendor/bin/phpbench run --progress=none --report='generator: "table", cols: ["subject", "mem_peak", "mean", "diff"]'
+vendor/bin/phpbench run --report='default
 ```

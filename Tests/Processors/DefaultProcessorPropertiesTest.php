@@ -16,7 +16,7 @@ class DefaultProcessorPropertiesTest extends TestCase
         $processor = new Memory([]);
 
         $this->assertSame(-1, $this->property($processor, 'levels'));
-        $this->assertSame('timestamp [levelname]: message', $this->property($processor, 'format'));
+        $this->assertSame('timestamp [levelname] message', $this->property($processor, 'format'));
         $this->assertSame('', $this->property($processor, 'formatted'));
     }
 

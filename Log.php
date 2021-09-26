@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Koded package.
@@ -25,13 +25,7 @@ use Throwable;
  *
  *  CONFIGURATION PARAMETERS (Log class)
  *
- *      -   deferred (bool)         [optional], default: false
- *          A flag to set the Log instance how to dump messages.
- *          Set to TRUE if you want to process all accumulated messages
- *          at shutdown time. Otherwise, the default behavior is to process
- *          the message immediately after the LoggerInterface method is called.
- *
- *      -   loggers (array)
+ *      -   processors (array)
  *          An array of log processors. Every processor is defined in array with it's own
  *          configuration parameters, but ALL must have the following:
  *
@@ -56,67 +50,41 @@ use Throwable;
  *
  *
  *  CONFIGURATION PARAMETERS (Processor class)
- *  Every processor may have it's own specific parameters.
+ *  Every processor may have its own specific parameters.
  *
  */
 class Log implements Logger
 {
     use LoggerTrait;
 
-    /**
-     * @var bool Flag to control the messages processing
-     */
-    private bool $deferred = false;
+    private const DATE_FORMAT = 'd/m/Y H:i:s.u';
+
+    private DateTimeZone $timezone;
 
     /**
-     * @var string The date format for the message.
-     */
-    private string $dateFormat;
-
-    /**
-     * @var DateTimeZone Valid timezone for the message.
-     */
-    private DateTimeZone|bool $timezone;
-
-    /**
-     * @var Processor[] Hash with all registered log processors.
+     * @var array<int, Processor> Hash with all registered log processors.
      */
     private array $processors = [];
 
     /**
-     * @var array List with all accumulated messages.
-     */
-    private array $messages = [];
-
-    /**
      * Creates all requested log processors.
      *
-     * @param array $settings
+     * @param array  $processors a list of log processors
+     * @param string $dateformat The date format for the messages
+     * @param string $timezone   The timezone for the messages
      */
-    public function __construct(array $settings)
+    public function __construct(
+        array $processors,
+        private string $dateformat = self::DATE_FORMAT,
+        string $timezone = 'UTC')
     {
-        $this->deferred = (bool)($settings['deferred'] ?? false);
-        $this->dateFormat = (string)($settings['dateformat'] ?? 'd/m/Y H:i:s.u');
-        if (false === $this->timezone = @\timezone_open((string)($settings['timezone'] ?? 'UTC'))) {
-            $this->timezone = \timezone_open('UTC');
-        }
-        foreach ((array)($settings['loggers'] ?? []) as $processor) {
+        $this->timezone = @\timezone_open($timezone) ?: \timezone_open('UTC');
+        foreach ($processors as $processor) {
             $this->attach(new $processor['class']($processor));
         }
-        if ($this->deferred) {
-            \register_shutdown_function([$this, 'process']);
-        }
     }
 
-    public function attach(Processor $processor): Logger
-    {
-        if (0 !== $processor->levels()) {
-            $this->processors[\spl_object_hash($processor)] = $processor;
-        }
-        return $this;
-    }
-
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         try {
             $levelName = \strtoupper($level);
@@ -125,37 +93,35 @@ class Log implements Logger
             $levelName = 'LOG';
             $level = -1;
         }
-        $this->messages[] = [
-            'level'     => $level,
-            'levelname' => $levelName,
-            'message'   => $this->formatMessage($message, $context),
-            'timestamp' => \date_create_immutable('now', $this->timezone ?: null)->format($this->dateFormat),
-        ];
-        $this->deferred || $this->process();
-    }
-
-    public function process(): void
-    {
         foreach ($this->processors as $processor) {
-            $processor->update($this->messages);
+            $processor->update([
+               'level' => $level,
+               'levelname' => $levelName,
+               'message' => $this->formatMessage($message, $context),
+               'timestamp' => $this->now(),
+           ]);
         }
-        $this->messages = [];
     }
 
-    public function exception(Throwable $e, Processor $processor = null): void
+    public function attach(Processor $processor): Logger
     {
-        $logger = $processor ?? new Cli([]);
-        $message = $e->getMessage() . PHP_EOL . ' -- [Trace]: ' . $e->getTraceAsString();
-
-        $this->attach($logger)->critical($message);
-        $this->process();
-        $this->detach($logger);
+        if (0 !== $processor->levels()) {
+            $this->processors[\spl_object_id($processor)] = $processor;
+        }
+        return $this;
     }
 
     public function detach(Processor $processor): Logger
     {
-        unset($this->processors[\spl_object_hash($processor)]);
+        unset($this->processors[\spl_object_id($processor)]);
         return $this;
+    }
+
+    public function exception(Throwable $e, Processor $processor = null): void
+    {
+        $this->attach($processor ??= new Cli([]));
+        $this->critical($e->getMessage() . PHP_EOL . ' -- [Trace]: ' . $e->getTraceAsString());
+        $this->detach($processor);
     }
 
     /**
@@ -173,5 +139,11 @@ class Log implements Logger
             $replacements['{' . $k . '}'] = $v;
         }
         return \strtr((string)$message, $replacements);
+    }
+
+    private function now(): string
+    {
+        return \date_create_immutable('now', $this->timezone)
+            ->format($this->dateformat);
     }
 }

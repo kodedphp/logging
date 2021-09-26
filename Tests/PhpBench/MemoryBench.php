@@ -3,13 +3,12 @@
 namespace Tests\Koded\Logging\PhpBench;
 
 use Koded\Logging\Processors\Memory;
+use PhpBench\Attributes as Bench;
 
 class MemoryBench extends AbstractBench
 {
-    /**
-     * @Revs(1000)
-     * @Iterations(3)
-     */
+    #[Bench\Revs(1000)]
+    #[Bench\Iterations(3)]
     public function benchMemory()
     {
         $this->log->debug(...$this->message());
@@ -25,8 +24,7 @@ class MemoryBench extends AbstractBench
     protected function getConfig(): array
     {
         return [
-            'deferred' => false,
-            'loggers'  => [
+            [
                 ['class' => Memory::class],
             ]
         ];

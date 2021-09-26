@@ -15,12 +15,10 @@ class LogTest extends TestCase
 
     public function test_default_setup()
     {
-        $this->assertSame(false, $this->property($this->log, 'deferred'));
-        $this->assertSame('d/m/Y H:i:s.u', $this->property($this->log, 'dateFormat'));
+        $this->assertSame('d/m/Y H:i:s.u', $this->property($this->log, 'dateformat'));
         $this->assertSame('UTC', $this->property($this->log, 'timezone')->getName());
 
         $this->assertEmpty($this->property($this->log, 'processors'));
-        $this->assertEmpty($this->property($this->log, 'messages'));
     }
 
     public function test_attach_and_detach()
@@ -56,10 +54,10 @@ class LogTest extends TestCase
     public function test_exception()
     {
         $processor = new Memory([]);
-        $this->log->exception(new Exception('The message', 1), $processor);
+        $this->log->exception(new Exception('The error message', 1), $processor);
 
         $this->assertStringContainsString('[CRITICAL]', $this->property($processor, 'formatted'));
-        $this->assertStringContainsString('The message', $this->property($processor, 'formatted'));
+        $this->assertStringContainsString('The error message', $this->property($processor, 'formatted'));
     }
 
     protected function setUp(): void

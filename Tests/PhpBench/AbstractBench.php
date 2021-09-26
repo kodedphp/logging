@@ -3,19 +3,18 @@
 namespace Tests\Koded\Logging\PhpBench;
 
 use Koded\Logging\Log;
+use PhpBench\Attributes as Bench;
 
-/**
- * @BeforeMethods({"setUp"})
- * @AfterMethods({"tearDown"})
- * @OutputTimeUnit("milliseconds")
- */
+#[Bench\BeforeMethods("setUp")]
+#[Bench\AfterMethods("tearDown")]
+#[Bench\OutputTimeUnit("milliseconds")]
 abstract class AbstractBench
 {
     protected ?Log $log;
 
     public function setUp(): void
     {
-        $this->log = new Log($this->getConfig());
+        $this->log = new Log(...$this->getConfig());
     }
 
     public function tearDown(): void

@@ -12,18 +12,19 @@ class SyslogTest extends TestCase
     {
         $processor = new Syslog([]);
 
-        $processor->update([
+        $processor->update(
             [
                 'level' => Logger::DEBUG,
                 'message' => 'Syslog 1',
                 'timestamp' => 1234567890
-            ],
+            ]);
+
+        $processor->update(
             [
                 'level' => Logger::DEBUG,
                 'message' => 'Syslog 2',
                 'timestamp' => 1234567891
-            ]
-        ]);
+            ]);
 
         $this->assertSame('', $processor->formatted());
     }

@@ -12,20 +12,21 @@ class CliTest extends TestCase
     {
         $processor = new Cli([]);
 
-        $processor->update([
+        $processor->update(
             [
                 'level' => Logger::DEBUG,
                 'levelname' => 'TEST',
                 'message' => 'Cli 1',
                 'timestamp' => 1234567890
-            ],
+            ]);
+
+        $processor->update(
             [
                 'level' => Logger::DEBUG,
                 'levelname' => 'TEST',
                 'message' => 'Cli 2',
                 'timestamp' => 1234567891
-            ]
-        ]);
+            ]);
 
         $this->assertSame('', $processor->formatted());
     }
