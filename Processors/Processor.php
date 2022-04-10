@@ -47,7 +47,8 @@ abstract class Processor
      * Receive update from the Log instance.
      * This is where the messages are filtered and processed.
      *
-     * @param array $message The message to be processed
+     * @param array{level: int, levelname: string, message: string, timestamp: string} $message
+     *     The message to be processed
      *
      * @return void
      */

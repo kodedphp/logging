@@ -12,6 +12,11 @@
 
 namespace Koded\Logging\Processors;
 
+use function defined;
+use function fopen;
+use function fwrite;
+use function strtr;
+
 /**
  * Log processor for CLI.
  *
@@ -26,11 +31,11 @@ class Cli extends Processor
     public function __construct(array $settings)
     {
         parent::__construct($settings);
-        $this->handle = \defined('STDOUT') ? STDOUT : \fopen('php://stdout', 'w');
+        $this->handle = defined('STDOUT') ? STDOUT : fopen('php://stdout', 'w');
     }
 
     protected function process(array $message): void
     {
-        \fwrite($this->handle, \strtr($this->format, $message) . PHP_EOL);
+        fwrite($this->handle, strtr($this->format, $message) . PHP_EOL);
     }
 }

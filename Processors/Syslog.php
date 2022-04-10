@@ -13,6 +13,9 @@
 namespace Koded\Logging\Processors;
 
 use Koded\Logging\Logger;
+use function closelog;
+use function openlog;
+use function strtr;
 
 /**
  * System log.
@@ -37,10 +40,10 @@ class Syslog extends Processor
         ];
 
         try {
-            \openlog(null, LOG_CONS, LOG_USER);
-            \syslog($levels[$message['level']] ?? LOG_DEBUG, \strtr($this->format, $message));
+            openlog('', LOG_CONS, LOG_USER);
+            \syslog($levels[$message['level']] ?? LOG_DEBUG, strtr($this->format, $message));
         } finally {
-            \closelog();
+            closelog();
         }
     }
 }

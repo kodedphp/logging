@@ -15,7 +15,14 @@ namespace Koded\Logging;
 use Koded\Logging\Processors\{Cli, Processor};
 use DateTimeZone;
 use Psr\Log\LoggerTrait;
+use Stringable;
 use Throwable;
+use function constant;
+use function date_create_immutable;
+use function spl_object_id;
+use function strtoupper;
+use function strtr;
+use function timezone_open;
 
 /**
  * Class Log for logging different types of application messages.
@@ -78,17 +85,17 @@ class Log implements Logger
         private string $dateformat = self::DATE_FORMAT,
         string $timezone = 'UTC')
     {
-        $this->timezone = @\timezone_open($timezone) ?: \timezone_open('UTC');
+        $this->timezone = @timezone_open($timezone) ?: timezone_open('UTC');
         foreach ($processors as $processor) {
             $this->attach(new $processor['class']($processor));
         }
     }
 
-    public function log($level, $message, array $context = []): void
+    public function log($level, string|Stringable $message, array $context = []): void
     {
         try {
-            $levelName = \strtoupper($level);
-            $level = \constant('static::' . $levelName);
+            $levelName = strtoupper($level);
+            $level = constant('static::' . $levelName);
         } catch (Throwable) {
             $levelName = 'LOG';
             $level = -1;
@@ -106,21 +113,21 @@ class Log implements Logger
     public function attach(Processor $processor): Logger
     {
         if (0 !== $processor->levels()) {
-            $this->processors[\spl_object_id($processor)] = $processor;
+            $this->processors[spl_object_id($processor)] = $processor;
         }
         return $this;
     }
 
     public function detach(Processor $processor): Logger
     {
-        unset($this->processors[\spl_object_id($processor)]);
+        unset($this->processors[spl_object_id($processor)]);
         return $this;
     }
 
     public function exception(Throwable $e, Processor $processor = null): void
     {
         $this->attach($processor ??= new Cli([]));
-        $this->critical($e->getMessage() . PHP_EOL . ' -- [Trace]: ' . $e->getTraceAsString());
+        $this->critical($e->getMessage() . PHP_EOL . ' [Trace]: ' . $e->getTraceAsString());
         $this->detach($processor);
     }
 
@@ -138,12 +145,12 @@ class Log implements Logger
         foreach ($params as $k => $v) {
             $replacements['{' . $k . '}'] = $v;
         }
-        return \strtr((string)$message, $replacements);
+        return strtr((string)$message, $replacements);
     }
 
     private function now(): string
     {
-        return \date_create_immutable('now', $this->timezone)
+        return date_create_immutable('now', $this->timezone)
             ->format($this->dateformat);
     }
 }

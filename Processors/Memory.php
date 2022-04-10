@@ -12,6 +12,8 @@
 
 namespace Koded\Logging\Processors;
 
+use function strtr;
+
 /**
  * In-memory logger.
  *
@@ -20,6 +22,6 @@ class Memory extends Processor
 {
     protected function process(array $message): void
     {
-        $this->formatted .= PHP_EOL . \strtr($this->format, $message);
+        $this->formatted .= PHP_EOL . strtr($this->format, $message);
     }
 }

@@ -14,6 +14,14 @@ namespace Koded\Logging\Processors;
 
 use Exception;
 use Koded\Exceptions\KodedException;
+use function date;
+use function file_put_contents;
+use function is_dir;
+use function is_writable;
+use function mkdir;
+use function rtrim;
+use function strtr;
+use function umask;
 
 /**
  * Log processor for storing the log messages into text files on the disk.
@@ -40,19 +48,15 @@ class File extends Processor
     public function __construct(array $settings)
     {
         parent::__construct($settings);
-
-        \umask(\umask() | 0002);
+        umask(umask() | 0002);
+        $this->dir = rtrim((string)$settings['dir'], '/');
         $this->ext = (string)($settings['extension'] ?? '.log');
-        $this->dir = \rtrim((string)$settings['dir'], '/');
-
-        if (false === \is_dir($this->dir)) {
+        if (false === is_dir($this->dir)) {
             throw FileProcessorException::directoryDoesNotExist($this->dir);
         }
-
-        if (false === \is_writable($this->dir)) {
+        if (false === is_writable($this->dir)) {
             throw FileProcessorException::directoryIsNotWritable($this->dir);
         }
-
         $this->dir .= '/';
     }
 
@@ -60,10 +64,10 @@ class File extends Processor
     {
         try {
             // The filename should be calculated at the moment of writing
-            $dir = $this->dir . \date('Y/m');
-            \is_dir($dir) || \mkdir($dir, 0775, true);
+            $dir = $this->dir . date('Y/m');
+            is_dir($dir) || mkdir($dir, 0775, true);
 
-            \file_put_contents($dir . '/' . \date('d') . $this->ext, \strtr($this->format, $message) . PHP_EOL,
+            file_put_contents($dir . '/' . date('d') . $this->ext, strtr($this->format, $message) . PHP_EOL,
                 FILE_APPEND);
 
             // @codeCoverageIgnoreStart
