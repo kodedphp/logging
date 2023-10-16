@@ -22,7 +22,7 @@ or add it manually in your current `composer.json`
 ```json
 {
   "require": {
-    "koded/logging": "~2"
+    "koded/logging": "^3"
   }
 }
 ```
