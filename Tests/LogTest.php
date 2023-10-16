@@ -11,26 +11,27 @@ class LogTest extends TestCase
 {
     use LoggerAttributeTrait;
 
-    private Log $log;
-
     public function test_default_setup()
     {
-        $this->assertSame('d/m/Y H:i:s.u', $this->property($this->log, 'dateformat'));
-        $this->assertSame('UTC', $this->property($this->log, 'timezone')->getName());
+        $log = new Log;
 
-        $this->assertEmpty($this->property($this->log, 'processors'));
+        $this->assertSame('d/m/Y H:i:s.u', $this->property($log, 'dateformat'));
+        $this->assertSame('UTC', $this->property($log, 'timezone')->getName());
+        $this->assertEmpty($this->property($log, 'processors'));
     }
 
     public function test_attach_and_detach()
     {
+        $log = new Log;
         $processor = new Memory([]);
-        $this->assertCount(0, $this->property($this->log, 'processors'));
 
-        $this->log->attach($processor);
-        $this->assertCount(1, $this->property($this->log, 'processors'));
+        $this->assertCount(0, $this->property($log, 'processors'));
 
-        $this->log->detach($processor);
-        $this->assertCount(0, $this->property($this->log, 'processors'));
+        $log->attach($processor);
+        $this->assertCount(1, $this->property($log, 'processors'));
+
+        $log->detach($processor);
+        $this->assertCount(0, $this->property($log, 'processors'));
     }
 
     public function test_log_suppression()
@@ -53,15 +54,27 @@ class LogTest extends TestCase
 
     public function test_exception()
     {
+        $log = new Log;
+
         $processor = new Memory([]);
-        $this->log->exception(new Exception('The error message', 1), $processor);
+        $log->exception(new Exception('The error message', 1), $processor);
 
         $this->assertStringContainsString('[CRITICAL]', $this->property($processor, 'formatted'));
         $this->assertStringContainsString('The error message', $this->property($processor, 'formatted'));
     }
 
-    protected function setUp(): void
+    public function test_log_level()
     {
-        $this->log = new Log([]);
+        $log = new Log;
+        $processor = new Memory([]);
+        $log->attach($processor);
+
+        $log->log('TESTING', 'Hello {u}', ['u' => 'Universe']);
+
+        $this->assertStringContainsString(
+            '[LOG] Hello Universe',
+            $processor->formatted(),
+            'The unknown level is defaulted to "LOG"'
+        );
     }
 }
