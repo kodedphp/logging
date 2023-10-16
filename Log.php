@@ -65,28 +65,23 @@ class Log implements Logger
     use LoggerTrait;
 
     private const DATE_FORMAT = 'd/m/Y H:i:s.u';
-
     private DateTimeZone $timezone;
-
-    /**
-     * @var array<int, Processor> Hash with all registered log processors.
-     */
-    private array $processors = [];
 
     /**
      * Creates all requested log processors.
      *
-     * @param array  $processors a list of log processors
+     * @param array<int, Processor>  $processors a list of log processors
      * @param string $dateformat The date format for the messages
      * @param string $timezone   The timezone for the messages
      */
     public function __construct(
-        array $processors,
+        private array $processors = [],
         private string $dateformat = self::DATE_FORMAT,
         string $timezone = 'UTC')
     {
         $this->timezone = @timezone_open($timezone) ?: timezone_open('UTC');
-        foreach ($processors as $processor) {
+        foreach ($processors as $i => $processor) {
+            unset($this->processors[$i]);
             $this->attach(new $processor['class']($processor));
         }
     }
