@@ -1,8 +1,9 @@
 build/
 logs/
 vendor/
-.DS_Store/
 .idea/
+.fleet/
+.DS_Store
 composer.lock
 *.phar
 *.cache
