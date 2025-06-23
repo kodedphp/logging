@@ -50,5 +50,8 @@
   "config": {
     "optimize-autoloader": true,
     "sort-packages": true
+  },
+  "provide": {
+    "psr/log-implementation": "^3.0"
   }
 }
