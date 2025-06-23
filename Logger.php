@@ -61,5 +61,5 @@ interface Logger extends LoggerInterface
      *
      * @return void
      */
-    public function exception(Throwable $e, Processor $processor = null): void;
+    public function exception(Throwable $e, Processor|null $processor = null): void;
 }

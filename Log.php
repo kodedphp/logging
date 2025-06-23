@@ -119,7 +119,7 @@ class Log implements Logger
         return $this;
     }
 
-    public function exception(Throwable $e, Processor $processor = null): void
+    public function exception(Throwable $e, Processor|null $processor = null): void
     {
         $this->attach($processor ??= new Cli([]));
         $this->critical($e->getMessage() . PHP_EOL . ' [Trace]: ' . $e->getTraceAsString());
